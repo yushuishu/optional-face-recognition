@@ -1,11 +1,11 @@
-package com.shuishu.face.common.config.face;
+package com.shuishu.face.strategy;
 
 
-import com.shuishu.face.common.config.face.service.FaceRecognitionService;
-import com.shuishu.face.common.config.face.service.impl.ArcSoftFaceServiceImpl;
-import com.shuishu.face.common.config.face.service.impl.BaiduOfflineFaceServiceImpl;
-import com.shuishu.face.common.config.face.service.impl.BaiduOnlineFaceServiceImpl;
-import com.shuishu.face.common.config.face.service.impl.MegviiFaceServiceImpl;
+import com.shuishu.face.strategy.service.FaceRecognitionService;
+import com.shuishu.face.strategy.service.impl.ArcSoftFaceServiceImpl;
+import com.shuishu.face.strategy.service.impl.BaiduOfflineFaceServiceImpl;
+import com.shuishu.face.strategy.service.impl.BaiduOnlineFaceServiceImpl;
+import com.shuishu.face.strategy.service.impl.MegviiFaceServiceImpl;
 
 /**
  * @Author ：谁书-ss

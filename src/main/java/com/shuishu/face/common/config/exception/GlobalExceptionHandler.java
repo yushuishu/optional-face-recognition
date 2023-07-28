@@ -1,7 +1,7 @@
 package com.shuishu.face.common.config.exception;
 
 
-import com.shuishu.blog.common.config.base.ApiResponse;
+import com.shuishu.face.common.config.base.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;

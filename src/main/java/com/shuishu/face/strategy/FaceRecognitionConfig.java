@@ -1,7 +1,7 @@
-package com.shuishu.face.common.config.face;
+package com.shuishu.face.strategy;
 
 
-import com.shuishu.face.common.config.face.service.FaceRecognitionService;
+import com.shuishu.face.strategy.service.FaceRecognitionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

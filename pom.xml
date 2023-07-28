@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.0.5</version>
         <relativePath/>
     </parent>
 
@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.1.2</spring-boot.version>
+        <spring-boot.version>3.0.5</spring-boot.version>
         <postgresql.version>42.5.1</postgresql.version>
         <HikariCP.version>5.0.1</HikariCP.version>
         <querydsl-sql-spring.version>5.0.0</querydsl-sql-spring.version>

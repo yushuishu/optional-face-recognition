@@ -11,6 +11,34 @@ package com.shuishu.face.common.enums;
  * <p></p>
  */
 public interface FaceEnum {
+    /**
+     * 性别
+     */
+    enum Gender {
+        /**
+         * 性别
+         */
+        UNKNOWN("UNKNOWN", "未知"),
+        MALE("MALE", "男"),
+        FEMALE("FEMALE", "女")
 
+        ;
+
+        private final String code;
+        private final String des;
+
+        Gender(String code, String des) {
+            this.code = code;
+            this.des = des;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getDes() {
+            return des;
+        }
+    }
 
 }

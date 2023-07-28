@@ -3,7 +3,7 @@ package com.shuishu.face.common.config.jdbc;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.shuishu.blog.common.config.id.IdGenerate;
+import com.shuishu.face.common.config.id.IdGenerate;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

@@ -1,7 +1,10 @@
-package com.shuishu.face.common.config.face.service.impl;
+package com.shuishu.face.strategy.service.impl;
 
 
-import com.shuishu.face.common.config.face.service.FaceRecognitionService;
+import com.shuishu.face.strategy.service.FaceRecognitionService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 /**
  * @Author ：谁书-ss
@@ -16,5 +19,10 @@ public class ArcSoftFaceServiceImpl implements FaceRecognitionService {
     @Override
     public void initialize() {
 
+    }
+
+    @Override
+    public Map<String, String> addFace(MultipartFile multipartFile) {
+        return null;
     }
 }
