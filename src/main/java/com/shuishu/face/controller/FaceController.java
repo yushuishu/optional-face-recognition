@@ -57,8 +57,16 @@ public class FaceController {
     }
 
     @Operation(summary = "比对", description = "两张人脸图片比对是否一致，true：相同的人脸；false：不相同")
-    @PostMapping("comparison")
+    @GetMapping("comparison")
     public ApiResponse<Boolean> comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
         return ApiResponse.of(faceService.comparisonFace(faceComparisonFaceDTO));
     }
+
+    @Operation(summary = "解绑", description = "删除读者证所有的人脸绑定数据")
+    @PostMapping("delete")
+    public ApiResponse<String> deleteFace(FaceDeleteDTO faceDeleteDTO) {
+        faceService.deleteFace(faceDeleteDTO);
+        return ApiResponse.success();
+    }
+
 }

@@ -1,10 +1,11 @@
 package com.shuishu.face.strategy.service.impl;
 
 
+import com.shuishu.face.common.entity.bo.FaceBO;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @Author ：谁书-ss
@@ -22,7 +23,12 @@ public class BaiduOnlineFaceServiceImpl implements FaceRecognitionService {
     }
 
     @Override
-    public Map<String, String> addFace(MultipartFile multipartFile) {
+    public FaceBO addFace(MultipartFile multipartFile) {
+        return null;
+    }
+
+    @Override
+    public List<FaceBO> addFaceList(List<MultipartFile> multipartFileList) {
         return null;
     }
 }

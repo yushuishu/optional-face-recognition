@@ -57,4 +57,11 @@ public interface FaceService {
      * @return -
      */
     Boolean comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO);
+
+    /**
+     * 删除读者证所有的人脸绑定数据
+     *
+     * @param faceDeleteDTO -
+     */
+    void deleteFace(FaceDeleteDTO faceDeleteDTO);
 }

@@ -1,0 +1,4 @@
+{
+    "detect_intv_before_track":0.02,
+    "detect_intv_during_track":0.02
+}

@@ -1,0 +1,13 @@
+{
+    "eye_open_threshold":0.5,
+    "eye_close_threshold":0.5,
+    "mouth_open_threshold":0.5,
+    "mouth_close_threshold":0.5,
+    "look_up_threshold":0.5,
+    "look_down_threshold":0.5,
+    "turn_left_threshold":0.5,
+    "turn_right_threshold":0.5,
+    "nod_threshold":0.5,
+    "shake_threshold":0.5,
+    "max_cache_num":1
+}

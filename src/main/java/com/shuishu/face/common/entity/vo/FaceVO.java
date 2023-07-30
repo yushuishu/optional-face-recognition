@@ -76,4 +76,10 @@ public class FaceVO extends BaseVO<Face> {
     @Schema(description = "更新人脸使用的API")
     private String updateApiName;
 
+    @Schema(description = "批量操作时，每个对象状态的code")
+    private int code = 0;
+
+    @Schema(description = "批量操作时，每个对象状态的信息")
+    private String message;
+
 }

@@ -30,7 +30,7 @@
         <joda-time.version>2.12.2</joda-time.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <fastjson.version>2.0.25</fastjson.version>
-        <google.guava.version>31.1-jre</google.guava.version>
+        <google.guava.version>32.1.1-jre</google.guava.version>
         <captcha.version>1.3.0</captcha.version>
         <JustAuth.version>1.16.5</JustAuth.version>
         <knife4j.version>4.1.0</knife4j.version>
