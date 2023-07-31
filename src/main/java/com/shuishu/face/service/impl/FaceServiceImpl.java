@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author ：谁书-ss
@@ -52,112 +53,252 @@ public class FaceServiceImpl implements FaceService {
         if (ObjectUtils.isEmpty(faceAddDTO.getFileList())) {
             throw new BusinessException("绑定人脸图片不能为空");
         }
-        List<MultipartFile> fileList = faceAddDTO.getFileList();
         if (StringUtils.hasText(faceAddDTO.getBarcode())) {
-            if (!Boolean.TRUE.equals(faceProperties.getAllowedMultipleBinding())) {
-                int bindingCount = faceDsl.findBindingCount(faceAddDTO.getLibraryCode(), faceAddDTO.getBarcode());
-                if (bindingCount > 0) {
-                    throw new BusinessException("您已绑定人脸，不可重复绑定");
-                }
-            }
-            // 获取第一张图片
-            MultipartFile multipartFile = fileList.get(0);
-            FaceBO faceBO = faceRecognitionService.addFace(multipartFile);
-            if (faceBO == null || faceBO.getOriginalImageUrl() == null || faceBO.getCropImageUrl() == null) {
-                throw new BusinessException("绑定人脸失败");
-            }
-            // 保存人脸绑定的数据
-            Face face = new Face();
-            BeanUtils.copyProperties(faceBO, face);
-            face.setBarcode(faceAddDTO.getBarcode());
-            face.setLibraryCode(faceAddDTO.getLibraryCode());
-            faceRepository.saveAndFlush(face);
-            FaceVO faceVO = new FaceVO();
-            BeanUtils.copyProperties(face, faceVO);
-            return Collections.singletonList(faceVO);
+            // 添加当个读者
+            return addFaceForSingle(faceAddDTO);
         } else {
-            List<FaceVO> faceVOList = new ArrayList<>();
-            List<FaceBO> faceBOList = new ArrayList<>();
-            // 当前请求是批量绑定人脸，图片名称作为读者证号
-            if (!Boolean.TRUE.equals(faceProperties.getAllowedMultipleBinding())) {
-                // 检查所有读者证是否存在已经绑定人脸的图片
-                List<MultipartFile> notBindMultipartFileList = new ArrayList<>();
-                Map<String, MultipartFile> multipartFileMap = new HashMap<>(fileList.size());
-                List<String> barcodeList = new ArrayList<>();
-                for (MultipartFile multipartFile : fileList) {
-                    String imageName = FileNameUtil.getPrefix(multipartFile.getName());
-                    if (imageName != null) {
-                        barcodeList.add(imageName);
-                        multipartFileMap.put(imageName, multipartFile);
-                    }
-                }
-                if (barcodeList.size() == 0) {
-                    throw new BusinessException("绑定人脸失败");
-                }
-                // 查询所有读者绑定人脸的数据
-                List<FaceVO> faceList = faceDsl.findByBarcodeList(faceAddDTO.getLibraryCode(), barcodeList);
-                if (!ObjectUtils.isEmpty(faceList)) {
-                    // 以馆code分组
-                    Map<String, List<FaceVO>> allLibraryFaceMap = faceList.stream().collect(Collectors.groupingBy(FaceVO::getLibraryCode));
-                    Set<Map.Entry<String, List<FaceVO>>> entries = allLibraryFaceMap.entrySet();
-                    for (Map.Entry<String, List<FaceVO>> entry : entries) {
-                        List<FaceVO> currentLibraryFaceMap = entry.getValue();
-                        // 以读者证分组，统计每个读者证绑定人脸的次数
-                        Map<String, Long> barcodeMap = currentLibraryFaceMap.stream().collect(Collectors.groupingBy(FaceVO::getBarcode, Collectors.counting()));
-                        Set<Map.Entry<String, Long>> entries2 = barcodeMap.entrySet();
-                        for (Map.Entry<String, Long> entry2 : entries2) {
-                            if (entry2.getValue() == null || entry2.getValue() == 0) {
-                                // 当前读者还未绑定人脸
-                                notBindMultipartFileList.add(multipartFileMap.get(entry2.getKey()));
-                            } else {
-                                FaceVO faceVO = new FaceVO();
-                                faceVO.setLibraryCode(faceVO.getLibraryCode());
-                                faceVO.setBarcode(entry2.getKey());
-                                faceVO.setCode(1);
-                                faceVO.setMessage("您已绑定人脸，不可重复绑定");
-                                faceVOList.add(faceVO);
-                            }
-                        }
-                    }
-                }
-                faceBOList = faceRecognitionService.addFaceList(notBindMultipartFileList);
-            } else {
-                faceBOList = faceRecognitionService.addFaceList(fileList);
+            // 添加多个读者
+            return addFaceForMultiple(faceAddDTO);
+        }
+    }
+
+    private List<FaceVO> addFaceForSingle(FaceAddDTO faceAddDTO) {
+        if (!Boolean.TRUE.equals(faceProperties.getAllowedMultipleBinding())) {
+            int bindingCount = faceDsl.findBindingCount(faceAddDTO.getLibraryCode(), faceAddDTO.getBarcode());
+            if (bindingCount > 0) {
+                throw new BusinessException("您已绑定人脸，不可重复绑定");
             }
-            if (!ObjectUtils.isEmpty(faceBOList)) {
-                List<Face> faceList = new ArrayList<>();
-                for (FaceBO faceBO : faceBOList) {
-                    FaceVO faceVO = new FaceVO();
-                    BeanUtils.copyProperties(faceBO, faceVO);
-                    faceVOList.add(faceVO);
-                    if (faceBO.getCode() == 0 && faceBO.getOriginalImageUrl() != null && faceBO.getCropImageUrl() != null) {
-                        Face face = new Face();
-                        BeanUtils.copyProperties(faceBO, face);
-                        faceList.add(face);
-                    }
+        }
+        // 获取第一张图片
+        MultipartFile multipartFile = faceAddDTO.getFileList().get(0);
+        FaceBO faceBO = faceRecognitionService.addFace(faceAddDTO.getLibraryCode(), faceAddDTO.getBarcode(), multipartFile);
+        if (faceBO == null || faceBO.getOriginalImageUrl() == null || faceBO.getCropImageUrl() == null) {
+            throw new BusinessException("绑定人脸失败");
+        }
+        // 保存人脸绑定的数据
+        Face face = new Face();
+        BeanUtils.copyProperties(faceBO, face);
+        face.setBarcode(faceAddDTO.getBarcode());
+        face.setLibraryCode(faceAddDTO.getLibraryCode());
+        face.setDeviceSerialNumber(faceAddDTO.getDeviceSerialNumber());
+        face.setScene(faceAddDTO.getScene());
+        faceRepository.saveAndFlush(face);
+        FaceVO faceVO = new FaceVO();
+        BeanUtils.copyProperties(face, faceVO);
+        return Collections.singletonList(faceVO);
+    }
+
+    private List<FaceVO> addFaceForMultiple(FaceAddDTO faceAddDTO) {
+        // 当前请求是批量绑定人脸，图片名称作为读者证号
+        List<FaceVO> faceVOList = new ArrayList<>();
+        List<FaceBO> faceBOList;
+        List<MultipartFile> fileList = faceAddDTO.getFileList();
+        if (!Boolean.TRUE.equals(faceProperties.getAllowedMultipleBinding())) {
+            // 检查所有读者证是否存在已经绑定人脸的图片
+            List<MultipartFile> notBindMultipartFileList = new ArrayList<>();
+            Map<String, MultipartFile> multipartFileMap = new HashMap<>(fileList.size());
+            List<String> barcodeList = new ArrayList<>();
+            for (MultipartFile multipartFile : fileList) {
+                String imageName = FileNameUtil.getPrefix(multipartFile.getName());
+                if (imageName != null) {
+                    barcodeList.add(imageName);
+                    multipartFileMap.put(imageName, multipartFile);
                 }
-                faceRepository.saveAll(faceList);
-            } else {
+            }
+            if (barcodeList.size() == 0) {
                 throw new BusinessException("绑定人脸失败");
             }
-            return faceVOList;
+            // 查询数据库，所有读者证绑定的 所有人脸数据
+            List<FaceVO> faceList = faceDsl.findByBarcodeList(faceAddDTO.getLibraryCode(), barcodeList);
+            if (!ObjectUtils.isEmpty(faceList)) {
+                Map<String, Long> map = faceList.stream().collect(Collectors.groupingBy(FaceVO::getBarcode, Collectors.counting()));
+                for (String barcode : barcodeList) {
+                    Long bindFaceCount = map.get(barcode);
+                    if (bindFaceCount == null || bindFaceCount == 0) {
+                        // 当前读者还未绑定人脸
+                        notBindMultipartFileList.add(multipartFileMap.get(barcode));
+                    } else {
+                        FaceVO faceVO = new FaceVO();
+                        faceVO.setLibraryCode(faceVO.getLibraryCode());
+                        faceVO.setBarcode(barcode);
+                        faceVO.setCode(1);
+                        faceVO.setMessage("您已绑定人脸，不可重复绑定");
+                        faceVOList.add(faceVO);
+                    }
+                }
+                // 未绑定过人脸的读者证，开始人脸识别绑定
+                faceBOList = faceRecognitionService.addFaceList(faceAddDTO.getLibraryCode(), notBindMultipartFileList);
+            } else {
+                // 数据库不存在所有读者证的人脸信息，直接进行人脸识别绑定
+                faceBOList = faceRecognitionService.addFaceList(faceAddDTO.getLibraryCode(), fileList);
+            }
+        } else {
+            // 所有读者证可以多次绑定，直接进行人脸识别绑定
+            faceBOList = faceRecognitionService.addFaceList(faceAddDTO.getLibraryCode(), fileList);
         }
+        if (!ObjectUtils.isEmpty(faceBOList)) {
+            List<Face> faceList = new ArrayList<>();
+            for (FaceBO faceBO : faceBOList) {
+                faceBO.setDeviceSerialNumber(faceAddDTO.getDeviceSerialNumber());
+                faceBO.setScene(faceAddDTO.getScene());
+                FaceVO faceVO = new FaceVO();
+                BeanUtils.copyProperties(faceBO, faceVO);
+                faceVOList.add(faceVO);
+                if (faceBO.getCode() == 0 && faceBO.getOriginalImageUrl() != null && faceBO.getCropImageUrl() != null) {
+                    Face face = new Face();
+                    BeanUtils.copyProperties(faceBO, face);
+                    faceList.add(face);
+                }
+            }
+            if (!ObjectUtils.isEmpty(faceList)) {
+                // 保存人脸信息
+                faceRepository.saveAll(faceList);
+            }
+        } else {
+            throw new BusinessException("绑定人脸失败");
+        }
+        return faceVOList;
     }
 
     @Override
     public List<FaceVO> updateFace(FaceUpdateDTO faceUpdateDTO) {
+        if (ObjectUtils.isEmpty(faceUpdateDTO.getFileList())) {
+            throw new BusinessException("更新人脸图片不能为空");
+        }
+        if (StringUtils.hasText(faceUpdateDTO.getBarcode())) {
+            return updateFaceForSingle(faceUpdateDTO);
+        } else {
+            return updateFaceForMultiple(faceUpdateDTO);
+        }
+    }
 
-        return null;
+    private List<FaceVO> updateFaceForSingle(FaceUpdateDTO faceUpdateDTO) {
+        // 查询读者所有绑定的人脸
+        List<FaceVO> readerFaceList = faceDsl.findByBarcode(faceUpdateDTO.getLibraryCode(), faceUpdateDTO.getBarcode());
+        if (ObjectUtils.isEmpty(readerFaceList)) {
+            throw new BusinessException("您未绑定人脸");
+        }
+        // 更新人脸操作，要删除旧的绑定人脸ID集合、图片路径
+        List<Long> deleteFaceIdList = readerFaceList.stream().map(FaceVO::getFaceId).toList();
+        List<String> deleteOriginalImageUrlList = new ArrayList<>();
+        List<String> deleteCropImageUrlList = new ArrayList<>();
+        readerFaceList.forEach(t -> {
+            deleteOriginalImageUrlList.add(faceProperties.getFilePath() + "/" + t.getOriginalImageUrl());
+            deleteCropImageUrlList.add(faceProperties.getFilePath() + "/" + t.getCropImageUrl());
+        });
+        // 获取第一张图片
+        MultipartFile multipartFile = faceUpdateDTO.getFileList().get(0);
+        FaceBO faceBO = faceRecognitionService.addFace(faceUpdateDTO.getLibraryCode(), faceUpdateDTO.getBarcode(), multipartFile);
+        if (faceBO == null || faceBO.getOriginalImageUrl() == null || faceBO.getCropImageUrl() == null) {
+            throw new BusinessException("绑定人脸失败");
+        }
+        // 保存人脸绑定的数据
+        Face face = new Face();
+        BeanUtils.copyProperties(faceBO, face);
+        face.setBarcode(faceUpdateDTO.getBarcode());
+        face.setLibraryCode(faceUpdateDTO.getLibraryCode());
+        face.setDeviceSerialNumber(faceUpdateDTO.getDeviceSerialNumber());
+        face.setScene(faceUpdateDTO.getScene());
+        faceRepository.saveAndFlush(face);
+        // 响应数据
+        FaceVO faceVO = new FaceVO();
+        BeanUtils.copyProperties(face, faceVO);
+        // 删除人脸库图片
+        faceRecognitionService.deleteFace(faceUpdateDTO.getLibraryCode(), faceUpdateDTO.getBarcode(), deleteOriginalImageUrlList, deleteCropImageUrlList, false);
+        // 删除人脸
+        faceDsl.deleteByFaceIdList(deleteFaceIdList);
+        return Collections.singletonList(faceVO);
+    }
+
+    private List<FaceVO> updateFaceForMultiple(FaceUpdateDTO faceUpdateDTO) {
+        // 当前请求是批量绑定人脸，图片名称作为读者证号
+        List<FaceVO> faceVOList = new ArrayList<>();
+        List<FaceBO> faceBOList;
+        List<String> barcodeList = new ArrayList<>();
+        List<MultipartFile> alreadyBindMultipartFileList = new ArrayList<>();
+        List<MultipartFile> fileList = faceUpdateDTO.getFileList();
+        Map<String, MultipartFile> multipartFileMap = new HashMap<>(fileList.size());
+        for (MultipartFile multipartFile : fileList) {
+            String imageName = FileNameUtil.getPrefix(multipartFile.getName());
+            if (imageName != null) {
+                barcodeList.add(imageName);
+                multipartFileMap.put(imageName, multipartFile);
+            }
+        }
+        // 查询数据库，所有读者证的所有人脸信息
+        List<FaceVO> readerFaceList = faceDsl.findByBarcodeList(faceUpdateDTO.getLibraryCode(), barcodeList);
+        if (!ObjectUtils.isEmpty(readerFaceList)) {
+            Map<String, Long> map = readerFaceList.stream().collect(Collectors.groupingBy(FaceVO::getBarcode, Collectors.counting()));
+            for (String barcode : barcodeList) {
+                Long bindFaceCount = map.get(barcode);
+                if (bindFaceCount == null || bindFaceCount == 0) {
+                    FaceVO faceVO = new FaceVO();
+                    faceVO.setCode(1);
+                    faceVO.setMessage("您未绑定人脸");
+                    faceVOList.add(faceVO);
+                } else {
+                    alreadyBindMultipartFileList.add(multipartFileMap.get(barcode));
+                }
+            }
+        } else {
+            throw new BusinessException("所有读者均未绑定人脸");
+        }
+        //绑定人脸信息
+        faceBOList = faceRecognitionService.addFaceList(faceUpdateDTO.getLibraryCode(), alreadyBindMultipartFileList);
+        if (!ObjectUtils.isEmpty(faceBOList)) {
+            List<Face> faceList = new ArrayList<>();
+            for (FaceBO faceBO : faceBOList) {
+                faceBO.setDeviceSerialNumber(faceUpdateDTO.getDeviceSerialNumber());
+                faceBO.setScene(faceUpdateDTO.getScene());
+                FaceVO faceVO = new FaceVO();
+                BeanUtils.copyProperties(faceBO, faceVO);
+                faceVOList.add(faceVO);
+                if (faceBO.getCode() == 0 && faceBO.getOriginalImageUrl() != null && faceBO.getCropImageUrl() != null) {
+                    Face face = new Face();
+                    BeanUtils.copyProperties(faceBO, face);
+                    faceList.add(face);
+                }
+            }
+            if (!ObjectUtils.isEmpty(faceList)) {
+                // 保存更新的人脸信息
+                faceRepository.saveAll(faceList);
+                // 删除旧的人脸信息
+                List<Long> deleteFaceIdList = new ArrayList<>();
+                List<String> deleteImagePathList = new ArrayList<>();
+                List<String> imageFullNameList = new ArrayList<>();
+                List<String> updateSuccessBarcodeList = faceList.stream().map(Face::getBarcode).toList();
+                readerFaceList.forEach(t -> {
+                    // 只有更新成功的读者证人脸信息，才将旧的数据和图片删除
+                    if (updateSuccessBarcodeList.contains(t.getBarcode())) {
+                        deleteFaceIdList.add(t.getFaceId());
+                        deleteImagePathList.add(faceProperties.getFilePath() + "/" + t.getOriginalImageUrl());
+                        deleteImagePathList.add(faceProperties.getFilePath() + "/" + t.getCropImageUrl());
+                        imageFullNameList.add(FileNameUtil.getName(t.getCropImageUrl()));
+
+                    }
+                });
+                // 删除人脸库图片
+                // 删除数据库数据
+                faceDsl.deleteByFaceIdList(deleteFaceIdList);
+                // 删除本地图片
+                FileUtils.deleteFileList(deleteImagePathList);
+            }
+        } else {
+            throw new BusinessException("绑定人脸失败");
+        }
+        return faceVOList;
     }
 
     @Override
     public FaceVO recognize(FaceRecognitionDTO faceRecognitionDTO) {
+        List<FaceBO> faceBOList = faceRecognitionService.recognize(faceRecognitionDTO.getLibraryCode(), faceRecognitionDTO.getFile());
+
         return null;
     }
 
     @Override
-    public Boolean comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
-        return null;
+    public Integer comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
+        return faceRecognitionService.comparisonFace(faceComparisonFaceDTO.getFileOne(), faceComparisonFaceDTO.getFileTwo());
     }
 
     @Override
@@ -166,12 +307,18 @@ public class FaceServiceImpl implements FaceService {
         if (ObjectUtils.isEmpty(faceVOList)) {
             throw new BusinessException("读者未绑定过人脸");
         }
-        List<String> imagePathList = new ArrayList<>();
+        List<Long> faceIdList = new ArrayList<>();
+        List<String> originalImageUrlList = new ArrayList<>();
+        List<String> cropImageUrlList = new ArrayList<>();
         faceVOList.forEach(t -> {
-            imagePathList.add(faceProperties.getFilePath() + "/" + t.getOriginalImageUrl());
-            imagePathList.add(faceProperties.getFilePath() + "/" + t.getCropImageUrl());
+            originalImageUrlList.add(faceProperties.getFilePath() + "/" + t.getOriginalImageUrl());
+            cropImageUrlList.add(faceProperties.getFilePath() + "/" + t.getCropImageUrl());
         });
-        FileUtils.deleteFileList(imagePathList);
+        boolean deleteFace = faceRecognitionService.deleteFace(faceDeleteDTO.getLibraryCode(), faceDeleteDTO.getBarcode(), originalImageUrlList, cropImageUrlList, true);
+        if (!deleteFace) {
+            throw new BusinessException("解绑人脸失败");
+        }
+        faceDsl.deleteByFaceIdList(faceIdList);
     }
 
 

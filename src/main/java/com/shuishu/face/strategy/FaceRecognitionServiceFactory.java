@@ -1,6 +1,7 @@
 package com.shuishu.face.strategy;
 
 
+import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import com.shuishu.face.strategy.service.impl.ArcSoftFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.BaiduOfflineFaceServiceImpl;
@@ -19,18 +20,18 @@ import com.shuishu.face.strategy.service.impl.MegviiFaceServiceImpl;
 public class FaceRecognitionServiceFactory {
     private FaceRecognitionService faceRecognitionService;
 
-    public FaceRecognitionService createFacialRecognitionService(String apiName) {
+    public FaceRecognitionService createFacialRecognitionService(String apiName, FaceProperties faceProperties) {
         switch (apiName) {
             case "BAIDU_OFFLINE":
-                faceRecognitionService = new BaiduOfflineFaceServiceImpl();
+                faceRecognitionService = new BaiduOfflineFaceServiceImpl(faceProperties);
                 break;
             case "BAIDU_ONLINE":
-                faceRecognitionService = new BaiduOnlineFaceServiceImpl();
+                faceRecognitionService = new BaiduOnlineFaceServiceImpl(faceProperties);
             case "MEGVII":
-                faceRecognitionService = new MegviiFaceServiceImpl();
+                faceRecognitionService = new MegviiFaceServiceImpl(faceProperties);
                 break;
             case "ARC_SOFT":
-                faceRecognitionService = new ArcSoftFaceServiceImpl();
+                faceRecognitionService = new ArcSoftFaceServiceImpl(faceProperties);
                 break;
             default:
                 throw new IllegalArgumentException("无效的人脸识别API名称。");

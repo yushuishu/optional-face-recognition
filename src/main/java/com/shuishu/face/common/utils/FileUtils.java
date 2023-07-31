@@ -52,15 +52,15 @@ public class FileUtils {
      * @param libraryCode -馆code
      * @return -
      */
-    public static String getImageName(MultipartFile multipartFile, String barcode, String libraryCode){
+    public static String generateImageName(MultipartFile multipartFile, String barcode, String libraryCode){
         String suffix = Objects.requireNonNull(multipartFile.getOriginalFilename()).substring(multipartFile.getOriginalFilename().lastIndexOf("."));
         if (!StringUtils.hasText(suffix)) {
             suffix = ".jpg";
         }
         if (!StringUtils.hasText(barcode)) {
-            return String.format("REC-L%s-%s", libraryCode, DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN)) + suffix;
+            return String.format("FACE-%s-%s", libraryCode, DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN)) + suffix;
         }
-        return String.format("B%s-L%s-%s", barcode, libraryCode, DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN)) + suffix;
+        return String.format("FACE-%s-%s-%s", libraryCode, barcode, DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN)) + suffix;
     }
 
 }

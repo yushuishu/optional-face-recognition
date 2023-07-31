@@ -9,6 +9,8 @@ import com.shuishu.face.common.entity.dto.FaceQueryDTO;
 import com.shuishu.face.common.entity.po.QFace;
 import com.shuishu.face.common.entity.vo.FaceVO;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -90,6 +92,13 @@ public class FaceDsl extends BaseDsl {
         return jpaQueryFactory.select(qFace.faceId).from(qFace).where(builder).fetch().size();
     }
 
+    /**
+     * 查询指定读者绑定的人脸信息
+     *
+     * @param libraryCode -馆code
+     * @param barcode -读者证
+     * @return -
+     */
     public List<FaceVO> findByBarcode(String libraryCode, String barcode) {
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(libraryCode)) {
@@ -104,6 +113,13 @@ public class FaceDsl extends BaseDsl {
                 .fetch();
     }
 
+    /**
+     * 查询指定 批量的读者证人脸信息
+     *
+     * @param libraryCode -馆code
+     * @param barcodeList -读者证集合
+     * @return -
+     */
     public List<FaceVO> findByBarcodeList(String libraryCode, List<String> barcodeList) {
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(libraryCode)) {
@@ -116,5 +132,17 @@ public class FaceDsl extends BaseDsl {
                 .from(qFace)
                 .where(builder)
                 .fetch();
+    }
+
+    /**
+     * 删除人脸
+     *
+     * @param faceIdList -人脸ID集合
+     */
+    @Transactional(rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRES_NEW)
+    public void deleteByFaceIdList(List<Long> faceIdList) {
+        if (!ObjectUtils.isEmpty(faceIdList)) {
+            jpaQueryFactory.delete(qFace).where(qFace.faceId.in(faceIdList)).execute();
+        }
     }
 }
