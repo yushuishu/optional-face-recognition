@@ -29,6 +29,14 @@ public class FaceProperties {
      * 文件路径
      */
     private String filePath;
+    /**
+     * 原始图片路径
+     */
+    private String originalFilePath;
+    /**
+     * 剪切图片路径
+     */
+    private String cropFilePath;
 
 
     /**
@@ -59,16 +67,20 @@ public class FaceProperties {
          * secretKey
          */
         private String secretKey;
+        /**
+         * 模糊度
+         */
+        private Float blur;
     }
 
     /**
      * 百度
      */
-    private BaiduProperties baiduProperties;
+    private BaiduOfflineProperties baiduOfflineProperties;
     @Setter
     @Getter
     @ToString
-    public static class BaiduProperties {
+    public static class BaiduOfflineProperties {
         /**
          * 识别阙值
          */
@@ -89,7 +101,44 @@ public class FaceProperties {
          * secretKey
          */
         private String secretKey;
+        /**
+         * 模糊度
+         */
+        private Float blur;
+    }
 
+    /**
+     * 百度
+     */
+    private BaiduOnlineProperties baiduOnlineProperties;
+    @Setter
+    @Getter
+    @ToString
+    public static class BaiduOnlineProperties {
+        /**
+         * 识别阙值
+         */
+        private Float recognitionMinThreshold;
+        /**
+         * 绑定阙值
+         */
+        private Float bindingMinThreshold;
+        /**
+         * appId
+         */
+        private String appId;
+        /**
+         * apiKey
+         */
+        private String apiKey;
+        /**
+         * secretKey
+         */
+        private String secretKey;
+        /**
+         * 模糊度
+         */
+        private Float blur;
     }
 
     /**
@@ -120,9 +169,32 @@ public class FaceProperties {
          * secretKey
          */
         private String secretKey;
+        /**
+         * 模糊度
+         */
+        private Float blur;
     }
 
 
+    public void setFilePath(String filePath) {
+        if (filePath != null) {
+            this.filePath = filePath;
+            this.originalFilePath = filePath + "/original";
+            this.cropFilePath = filePath + "/crop";
+        }
+    }
 
+    public String getOriginalFilePath() {
+        if (originalFilePath == null && filePath != null) {
+            originalFilePath = filePath + "/original";
+        }
+        return originalFilePath;
+    }
 
+    public String getCropFilePath() {
+        if (cropFilePath == null && filePath != null) {
+            cropFilePath = filePath + "/crop";
+        }
+        return cropFilePath;
+    }
 }

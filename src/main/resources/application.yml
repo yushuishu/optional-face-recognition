@@ -12,23 +12,45 @@ face:
   arc-soft:
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
+    secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+    # 绑定得分阈值（0-100）
     binding-min-threshold: 80
+    # 识别得分阈值（0-100）
     recognition-min-threshold: 80
-    sercet-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
+    blur: 0.7
   # 百度
-  baidu:
+  baidu-offline:
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
-    binding-min-threshold: 80
-    recognition-min-threshold: 80
     secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+    # 绑定得分阈值（0-100）
+    binding-min-threshold: 80
+    # 识别得分阈值（0-100）
+    recognition-min-threshold: 80
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
+    blur: 0.7
+  baidu-online:
+    api-key: uftvVlqW7XQDvyAqEz4Mp6q3
+    app-id: 25209037
+    secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+    # 绑定得分阈值（0-100）
+    binding-min-threshold: 80
+    # 识别得分阈值（0-100）
+    recognition-min-threshold: 80
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
+    blur: 0.7
   # 旷视
   megvii:
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
-    binding-min-threshold: 80
-    recognition-min-threshold: 80
     secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+    # 绑定得分阈值（0-100）
+    binding-min-threshold: 80
+    # 识别得分阈值（0-100）
+    recognition-min-threshold: 80
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
+    blur: 0.7
 server:
   port: 8080
   tomcat:

@@ -5,6 +5,7 @@ import com.shuishu.face.common.entity.bo.FaceBO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ：谁书-ss
@@ -56,11 +57,12 @@ public interface FaceRecognitionService {
     /**
      * 人脸识别
      *
-     * @param libraryCode -馆code
-     * @param file -人脸图片
+     * @param faceFeatureMap -馆code
+     * @param faceFeatureSizeMap -馆code
+     * @param multipartFile -人脸图片
      * @return -
      */
-    List<FaceBO> recognize(String libraryCode, MultipartFile file);
+    List<FaceBO> recognize(Map<Long, byte[]> faceFeatureMap, Map<Long, Integer> faceFeatureSizeMap, MultipartFile multipartFile);
 
     /**
      * 图片比对

@@ -291,7 +291,14 @@ public class FaceServiceImpl implements FaceService {
 
     @Override
     public FaceVO recognize(FaceRecognitionDTO faceRecognitionDTO) {
-        List<FaceBO> faceBOList = faceRecognitionService.recognize(faceRecognitionDTO.getLibraryCode(), faceRecognitionDTO.getFile());
+        // 查询数据库所有人脸特征值
+        List<FaceVO> faceList = faceDsl.findByBarcode(faceRecognitionDTO.getLibraryCode(), null);
+        if (ObjectUtils.isEmpty(faceList)) {
+            throw new BusinessException("未绑定人脸");
+        }
+        Map<Long, byte[]> faceFeatureMap = faceList.stream().collect(Collectors.toMap(FaceVO::getFaceId, FaceVO::getFeatureByte));
+        Map<Long, Integer> faceFeatureSizeMap = faceList.stream().collect(Collectors.toMap(FaceVO::getFaceId, FaceVO::getFeatureSize));
+        List<FaceBO> faceBOList = faceRecognitionService.recognize(faceFeatureMap, faceFeatureSizeMap, faceRecognitionDTO.getFile());
 
         return null;
     }

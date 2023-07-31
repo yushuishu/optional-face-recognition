@@ -63,11 +63,11 @@ public class LocalCacheUtils {
         if (StringUtils.hasText(accessToken)) {
             return accessToken;
         }
-        FaceProperties.BaiduProperties baiduProperties = faceProperties.getBaiduProperties();
+        FaceProperties.BaiduOnlineProperties baiduOnlineProperties = faceProperties.getBaiduOnlineProperties();
         // 官网获取的 API Key 更新为你注册的
-        String clientId = baiduProperties.getAppId();
+        String clientId = baiduOnlineProperties.getAppId();
         // 官网获取的 Secret Key 更新为你注册的
-        String clientSecret = baiduProperties.getSecretKey();
+        String clientSecret = baiduOnlineProperties.getSecretKey();
         String newestAccessToken = getAuth(clientId, clientSecret);
         if (StringUtils.hasText(newestAccessToken)) {
             cacheBaiduAccessToken.put("baidu_face_token", newestAccessToken);

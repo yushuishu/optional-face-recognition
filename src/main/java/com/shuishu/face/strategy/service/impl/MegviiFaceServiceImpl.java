@@ -5,9 +5,12 @@ import com.shuishu.face.common.config.exception.BusinessException;
 import com.shuishu.face.common.entity.bo.FaceBO;
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
+import org.slf4j.Logger;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ：谁书-ss
@@ -20,8 +23,11 @@ import java.util.List;
  */
 public class MegviiFaceServiceImpl implements FaceRecognitionService {
     private FaceProperties faceProperties;
-    public MegviiFaceServiceImpl(FaceProperties faceProperties) {
+    private Logger logger;
+
+    public MegviiFaceServiceImpl(FaceProperties faceProperties, Logger logger) {
         this.faceProperties = faceProperties;
+        this.logger = logger;
     }
     public MegviiFaceServiceImpl() {
     }
@@ -29,10 +35,17 @@ public class MegviiFaceServiceImpl implements FaceRecognitionService {
 
     @Override
     public void initialize() {
-        if (faceProperties == null) {
-            throw new BusinessException("初始化人脸配置信息对象失败（FaceProperties）");
+        logger.info("开始初始化：旷视服务");
+        if (faceProperties == null || !StringUtils.hasText(faceProperties.getApiName()) || faceProperties.getAllowedMultipleBinding() == null ||
+                faceProperties.getFilePath() == null || faceProperties.getMegviiProperties() == null) {
+            throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-
+        FaceProperties.MegviiProperties megviiProperties = faceProperties.getMegviiProperties();
+        if (megviiProperties.getBindingMinThreshold() == null || megviiProperties.getRecognitionMinThreshold() == null ||
+                megviiProperties.getBlur() == null) {
+            throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
+        }
+        logger.info("服务初始化结束");
     }
 
     @Override
@@ -51,7 +64,7 @@ public class MegviiFaceServiceImpl implements FaceRecognitionService {
     }
 
     @Override
-    public List<FaceBO> recognize(String libraryCode, MultipartFile file) {
+    public List<FaceBO> recognize(Map<Long, byte[]> faceFeatureMap, Map<Long, Integer> faceFeatureSizeMap, MultipartFile multipartFile) {
         return null;
     }
 

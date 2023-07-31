@@ -7,6 +7,8 @@ import com.shuishu.face.strategy.service.impl.ArcSoftFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.BaiduOfflineFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.BaiduOnlineFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.MegviiFaceServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -25,15 +27,16 @@ public class FaceRecognitionServiceFactory {
     public FaceRecognitionService createFacialRecognitionService(String apiName, FaceProperties faceProperties) {
         switch (apiName) {
             case "BAIDU_OFFLINE":
-                faceRecognitionService = new BaiduOfflineFaceServiceImpl(faceProperties);
+                faceRecognitionService = new BaiduOfflineFaceServiceImpl(faceProperties, LoggerFactory.getLogger(BaiduOfflineFaceServiceImpl.class));
                 break;
             case "BAIDU_ONLINE":
-                faceRecognitionService = new BaiduOnlineFaceServiceImpl(faceProperties);
+                faceRecognitionService = new BaiduOnlineFaceServiceImpl(faceProperties, LoggerFactory.getLogger(BaiduOnlineFaceServiceImpl.class));
+                break;
             case "MEGVII":
-                faceRecognitionService = new MegviiFaceServiceImpl(faceProperties);
+                faceRecognitionService = new MegviiFaceServiceImpl(faceProperties, LoggerFactory.getLogger(MegviiFaceServiceImpl.class));
                 break;
             case "ARC_SOFT":
-                faceRecognitionService = new ArcSoftFaceServiceImpl(faceProperties);
+                faceRecognitionService = new ArcSoftFaceServiceImpl(faceProperties, LoggerFactory.getLogger(ArcSoftFaceServiceImpl.class));
                 break;
             default:
                 throw new IllegalArgumentException("无效的人脸识别API名称。");
