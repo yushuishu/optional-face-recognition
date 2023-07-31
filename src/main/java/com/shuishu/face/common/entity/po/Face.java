@@ -1,7 +1,6 @@
 package com.shuishu.face.common.entity.po;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shuishu.face.common.config.base.BasePO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,7 +33,6 @@ public class Face extends BasePO {
     @Comment("人脸id")
     private Long faceId;
 
-    @Column(nullable = false, unique = true)
     @Comment("读者条码")
     private String barcode;
 

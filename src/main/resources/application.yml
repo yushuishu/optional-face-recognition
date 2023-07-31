@@ -1,0 +1,79 @@
+face:
+  # true：允许多次注册 false：只能注册一次
+  allowed-multiple-binding: true
+  # ARC_SOFT：虹软
+  # BAIDU_OFFLINE：百度离线SDK
+  # BAIDU_ONLINE：百度在线SDK
+  # MEGVII：旷视
+  api-name: BAIDU_ONLINE
+  #人脸图片本地保存路径
+  file-path: D:\face
+  # 虹软
+  arc-soft:
+    api-key: uftvVlqW7XQDvyAqEz4Mp6q3
+    app-id: 25209037
+    binding-min-threshold: 80
+    recognition-min-threshold: 80
+    sercet-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+  # 百度
+  baidu:
+    api-key: uftvVlqW7XQDvyAqEz4Mp6q3
+    app-id: 25209037
+    binding-min-threshold: 80
+    recognition-min-threshold: 80
+    secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+  # 旷视
+  megvii:
+    api-key: uftvVlqW7XQDvyAqEz4Mp6q3
+    app-id: 25209037
+    binding-min-threshold: 80
+    recognition-min-threshold: 80
+    secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: utf-8
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${face.file-path}
+  datasource:
+    url: jdbc:postgresql://192.168.1.12:5432/face_dev?useUnicode=true&characterEncoding=utf8
+    username: postgres
+    password: 1
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 60000
+      idle-timeout: 300000
+      max-lifetime: 350000
+      maximum-pool-size: 20
+      minimum-idle: 10
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        hbm2ddl:
+          auto: update
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        temp:
+          use_jdbc_metadata_defaults: true
+        # 解决 Jpa In语句QueryPlanCache导致的JVM内存溢出
+        query:
+          # 限制缓存大小
+          plan_cache_max_size: 64
+          # 限制元数据大小
+          plan_parameter_metadata_max_size: 32
+          # 增加 IN 子句查询命中率
+          in_clause_parameter_padding: ture
+        #----end QueryPlanCache导致的JVM内存溢出-------
+    show-sql: true
+
+
+

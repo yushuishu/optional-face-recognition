@@ -7,6 +7,7 @@ import com.shuishu.face.strategy.service.impl.ArcSoftFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.BaiduOfflineFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.BaiduOnlineFaceServiceImpl;
 import com.shuishu.face.strategy.service.impl.MegviiFaceServiceImpl;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @Author ：谁书-ss
@@ -17,6 +18,7 @@ import com.shuishu.face.strategy.service.impl.MegviiFaceServiceImpl;
  * @Description ：人脸service工厂
  * <p></p>
  */
+@Configuration
 public class FaceRecognitionServiceFactory {
     private FaceRecognitionService faceRecognitionService;
 
