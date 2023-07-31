@@ -74,6 +74,9 @@ public class FaceBO {
     @Schema(description = "更新人脸使用的API")
     private String updateApiName;
 
+    @Schema(description = "图片比对得分")
+    private Float score;
+
     @Schema(description = "批量操作时，每个对象状态的code")
     private int code = 0;
 

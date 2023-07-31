@@ -71,5 +71,5 @@ public interface FaceRecognitionService {
      * @param fileTwo -人脸图片2
      * @return -比对得分，满分100分，一般认为80分以上认为是同一个人脸
      */
-    Integer comparisonFace(MultipartFile fileOne, MultipartFile fileTwo);
+    Float comparisonFace(MultipartFile fileOne, MultipartFile fileTwo);
 }

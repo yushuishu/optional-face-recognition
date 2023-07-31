@@ -69,7 +69,7 @@ public class MegviiFaceServiceImpl implements FaceRecognitionService {
     }
 
     @Override
-    public Integer comparisonFace(MultipartFile fileOne, MultipartFile fileTwo) {
+    public Float comparisonFace(MultipartFile fileOne, MultipartFile fileTwo) {
         return null;
     }
 

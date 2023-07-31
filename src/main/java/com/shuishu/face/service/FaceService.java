@@ -56,7 +56,7 @@ public interface FaceService {
      * @param faceComparisonFaceDTO -
      * @return -
      */
-    Integer comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO);
+    Float comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO);
 
     /**
      * 删除读者证所有的人脸绑定数据

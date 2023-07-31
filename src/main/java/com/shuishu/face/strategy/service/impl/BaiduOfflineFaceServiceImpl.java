@@ -4,6 +4,7 @@ package com.shuishu.face.strategy.service.impl;
 import cn.hutool.core.io.file.FileNameUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONB;
+import com.alibaba.fastjson2.JSONWriter;
 import com.jni.struct.Attribute;
 import com.jni.struct.FaceBox;
 import com.jni.struct.Feature;
@@ -14,7 +15,6 @@ import com.shuishu.face.common.utils.FileUtils;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import com.shuishu.face.strategy.utils.BaiduOfflineUtils;
 import org.slf4j.Logger;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,7 +63,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
     @Override
     public FaceBO addFace(String libraryCode, String barcode, MultipartFile multipartFile) {
         // 校验人脸属性
-        FaceBox faceBox = verifyFaceDetect(multipartFile);
+        FaceBox faceBox = verifyFaceDetect(multipartFile, true);
         // 获取人脸属性
         String imageAttrJson = BaiduOfflineUtils.imageAttr(multipartFile);
         if (!StringUtils.hasText(imageAttrJson)) {
@@ -158,24 +158,45 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         if (faceFeatureMap.isEmpty() || faceFeatureSizeMap.isEmpty() || multipartFile == null || multipartFile.getSize() == 0) {
             return null;
         }
+        // 获取当前图片特征值
+        String imageRgbdFeatureJson = BaiduOfflineUtils.imageRgbdFeature(multipartFile);
+        if (!StringUtils.hasText(imageRgbdFeatureJson)) {
+            throw new BusinessException("人脸识别失败");
+        }
+
+        FaceProperties.BaiduOfflineProperties baiduOfflineProperties = faceProperties.getBaiduOfflineProperties();
+        List<FaceBO> faceBOList = new ArrayList<>();
+
+        // 与 数据库所有特征值 比较
         Set<Map.Entry<Long, Integer>> entries = faceFeatureSizeMap.entrySet();
         for (Map.Entry<Long, Integer> entry : entries) {
-            Feature feature = new Feature();
-            feature.size = entry.getValue();
-            feature.data = faceFeatureMap.get(entry.getKey());
-
+            Feature tempFeature = new Feature();
+            tempFeature.size = entry.getValue();
+            tempFeature.data = faceFeatureMap.get(entry.getKey());
+            float compareFeature = BaiduOfflineUtils.compareFeature(imageRgbdFeatureJson, JSON.toJSONString(tempFeature, JSONWriter.Feature.WriteNullStringAsEmpty), 0);
+            if (compareFeature >= baiduOfflineProperties.getRecognitionMinThreshold()) {
+                FaceBO faceBO = new FaceBO();
+                faceBO.setFaceId(entry.getKey());
+                faceBO.setScore(compareFeature);
+                faceBOList.add(faceBO);
+            }
         }
-        return null;
+        return faceBOList;
     }
 
     @Override
-    public Integer comparisonFace(MultipartFile fileOne, MultipartFile fileTwo) {
-        return null;
+    public Float comparisonFace(MultipartFile fileOne, MultipartFile fileTwo) {
+        if (fileOne == null || fileTwo == null) {
+            throw new BusinessException("人脸比对，必须两种照片");
+        }
+        String imageRgbdFeatureJson1 = BaiduOfflineUtils.imageRgbdFeature(fileOne);
+        String imageRgbdFeatureJson2 = BaiduOfflineUtils.imageRgbdFeature(fileTwo);
+        return BaiduOfflineUtils.compareFeature(imageRgbdFeatureJson1, imageRgbdFeatureJson2, 0);
     }
 
 
 
-    private FaceBox verifyFaceDetect(MultipartFile file){
+    private FaceBox verifyFaceDetect(MultipartFile file, boolean isBindingOperate){
         // 先检测人脸可信度
         String imageDetectJson = BaiduOfflineUtils.imageDetect(file);
         if (!StringUtils.hasText(imageDetectJson) || "null".equals(imageDetectJson)) {
@@ -195,9 +216,16 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         if (StringUtils.hasText(illumination)){
             throw new BusinessException(illumination);
         }
-        if (faceBox.score < faceProperties.getBaiduOfflineProperties().getRecognitionMinThreshold()){
-            // 人脸置信度低，忽略
-            throw new BusinessException("置信度过低，请重新调整！");
+        if (isBindingOperate) {
+            if (faceBox.score < faceProperties.getBaiduOfflineProperties().getBindingMinThreshold()){
+                // 人脸置信度低，忽略
+                throw new BusinessException("置信度过低，请重新调整！");
+            }
+        } else {
+            if (faceBox.score < faceProperties.getBaiduOfflineProperties().getRecognitionMinThreshold()){
+                // 人脸置信度低，忽略
+                throw new BusinessException("置信度过低，请重新调整！");
+            }
         }
         // 模糊度检测
         float blurTemp = BaiduOfflineUtils.imageBlur(file);

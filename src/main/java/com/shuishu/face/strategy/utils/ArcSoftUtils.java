@@ -2,9 +2,13 @@ package com.shuishu.face.strategy.utils;
 
 
 /**
- * @author wuZhenFeng
- * @date 2023/7/31 14:20
+ * @Author ：谁书-ss
+ * @Date ：2023-07-27 14:20
+ * @IDE ：IntelliJ IDEA
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：虹软SDK 操作函数
+ * <p></p>
  */
-
 public class ArcSoftUtils {
 }

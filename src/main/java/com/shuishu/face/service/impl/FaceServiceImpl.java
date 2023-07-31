@@ -304,7 +304,7 @@ public class FaceServiceImpl implements FaceService {
     }
 
     @Override
-    public Integer comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
+    public Float comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
         return faceRecognitionService.comparisonFace(faceComparisonFaceDTO.getFileOne(), faceComparisonFaceDTO.getFileTwo());
     }
 

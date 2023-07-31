@@ -58,7 +58,7 @@ public class FaceController {
 
     @Operation(summary = "比对", description = "两张人脸图片比对是否一致，返回比对得分，满分100分，一般认为80分以上认为是同一个人脸")
     @GetMapping("comparison")
-    public ApiResponse<Integer> comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
+    public ApiResponse<Float> comparisonFace(FaceComparisonFaceDTO faceComparisonFaceDTO) {
         return ApiResponse.of(faceService.comparisonFace(faceComparisonFaceDTO));
     }
 

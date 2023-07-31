@@ -8,8 +8,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author wuZhenFeng
- * @date 2023/7/28 15:29
+ * @Author ：谁书-ss
+ * @Date ：2023-07-28 15:29
+ * @IDE ：IntelliJ IDEA
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：人脸配置信息
+ * <p></p>
  */
 @Setter
 @Getter
@@ -18,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "face")
 public class FaceProperties {
     /**
-     * true：允许多次绑定人脸 false：只能注册一次
+     * true：允许多次绑定人脸 false：只能注册绑定一次（一条数据）
      */
     private Boolean allowedMultipleBinding;
     /**

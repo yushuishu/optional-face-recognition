@@ -17,10 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 
 /**
- * @author wuZhenFeng
- * @date 2023/7/31 14:19
+ * @Author ：谁书-ss
+ * @Date ：2023-07-27 14:19
+ * @IDE ：IntelliJ IDEA
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：百度离线SDK 操作函数
+ * <p></p>
  */
-
 public class BaiduOfflineUtils {
     private static final Logger logger = LoggerFactory.getLogger(BaiduOfflineUtils.class);
 
