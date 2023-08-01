@@ -40,6 +40,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         this.faceProperties = faceProperties;
         this.logger = logger;
     }
+
     public BaiduOfflineFaceServiceImpl() {
     }
 
@@ -195,8 +196,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
     }
 
 
-
-    private FaceBox verifyFaceDetect(MultipartFile file, boolean isBindingOperate){
+    private FaceBox verifyFaceDetect(MultipartFile file, boolean isBindingOperate) {
         // 先检测人脸可信度
         String imageDetectJson = BaiduOfflineUtils.imageDetect(file);
         if (!StringUtils.hasText(imageDetectJson) || "null".equals(imageDetectJson)) {
@@ -206,35 +206,35 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         if (detectList == null || detectList.size() == 0) {
             throw new BusinessException("未检测到人脸");
         }
-        if (detectList.size() > 1){
+        if (detectList.size() > 1) {
             // 有多张人脸
             throw new BusinessException("识别到多张人脸，请重新调整位置！");
         }
         FaceBox faceBox = detectList.get(0);
         // 光线校验
         String illumination = BaiduOfflineUtils.imageIllumination(file);
-        if (StringUtils.hasText(illumination)){
+        if (StringUtils.hasText(illumination)) {
             throw new BusinessException(illumination);
         }
         if (isBindingOperate) {
-            if (faceBox.score < faceProperties.getBaiduOfflineProperties().getBindingMinThreshold()){
+            if (faceBox.score < faceProperties.getBaiduOfflineProperties().getBindingMinThreshold()) {
                 // 人脸置信度低，忽略
                 throw new BusinessException("置信度过低，请重新调整！");
             }
         } else {
-            if (faceBox.score < faceProperties.getBaiduOfflineProperties().getRecognitionMinThreshold()){
+            if (faceBox.score < faceProperties.getBaiduOfflineProperties().getRecognitionMinThreshold()) {
                 // 人脸置信度低，忽略
                 throw new BusinessException("置信度过低，请重新调整！");
             }
         }
         // 模糊度检测
         float blurTemp = BaiduOfflineUtils.imageBlur(file);
-        if (blurTemp > faceProperties.getBaiduOfflineProperties().getBlur()){
+        if (blurTemp > faceProperties.getBaiduOfflineProperties().getBlur()) {
             throw new BusinessException("检测到人脸模糊，请调整识别位置");
         }
         // 遮挡度
         String occlusionInfo = BaiduOfflineUtils.imageOcclusion(file);
-        if (StringUtils.hasText(occlusionInfo)){
+        if (StringUtils.hasText(occlusionInfo)) {
             throw new BusinessException(occlusionInfo);
         }
         return faceBox;

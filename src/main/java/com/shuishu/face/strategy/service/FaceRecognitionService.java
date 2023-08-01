@@ -57,9 +57,9 @@ public interface FaceRecognitionService {
     /**
      * 人脸识别
      *
-     * @param faceFeatureMap -馆code
+     * @param faceFeatureMap     -馆code
      * @param faceFeatureSizeMap -馆code
-     * @param multipartFile -人脸图片
+     * @param multipartFile      -人脸图片
      * @return -
      */
     List<FaceBO> recognize(Map<Long, byte[]> faceFeatureMap, Map<Long, Integer> faceFeatureSizeMap, MultipartFile multipartFile);

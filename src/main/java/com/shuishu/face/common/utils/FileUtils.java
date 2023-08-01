@@ -171,7 +171,7 @@ public class FileUtils {
      * 裁剪图片并重新装换大小
      *
      * @param multipartFile -图片文件
-     * @param imageFilePath  -保存文件全路径
+     * @param imageFilePath -保存文件全路径
      * @param posX          -x坐标轴
      * @param posY          -y坐标轴
      * @param width         -宽度
@@ -217,7 +217,7 @@ public class FileUtils {
             Imgproc.resize(subMat, resultMat, size);
             //生成剪切图片文件
             File imageFile = new File(imageFilePath);
-            if (!imageFile.exists()){
+            if (!imageFile.exists()) {
                 if (!imageFile.mkdirs()) {
                     System.out.println("创建文件异常");
                     return false;

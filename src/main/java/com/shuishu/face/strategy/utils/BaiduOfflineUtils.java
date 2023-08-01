@@ -34,7 +34,7 @@ public class BaiduOfflineUtils {
      *
      * @return -
      */
-    private static Face faceSdkInit(){
+    private static Face faceSdkInit() {
         // face 初始化
         Face api = new Face();
         int res = api.sdkInit("");
@@ -50,9 +50,9 @@ public class BaiduOfflineUtils {
      *
      * @param api -
      */
-    private static void faceSdkDestroy(Face api){
+    private static void faceSdkDestroy(Face api) {
         // sdk销毁，释放内存防内存泄漏
-        if (api != null){
+        if (api != null) {
             api.sdkDestroy();
         }
     }
@@ -60,13 +60,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 人脸检测
+     *
      * @param file -
      * @return -
      */
-    public static String imageDetect(MultipartFile file){
+    public static String imageDetect(MultipartFile file) {
         logger.info("【人脸检测】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             return null;
         }
         long matAddr = mat.getNativeObjAddr();
@@ -78,13 +79,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 口罩佩戴检测
+     *
      * @param file -
      * @return -
      */
     public static String imageMouthMask(MultipartFile file) {
         logger.info("【口罩佩戴检测】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             return null;
         }
         long matAddr = mat.getNativeObjAddr();
@@ -95,13 +97,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 模糊度：取值范围[0~1]，0是最清晰，1是最模糊 (推荐0.7)
+     *
      * @param file -
      * @return -
      */
-    public static float imageBlur(MultipartFile file){
+    public static float imageBlur(MultipartFile file) {
         logger.info("【模糊度检测】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             System.out.println("1");
             return 1;
         }
@@ -117,13 +120,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 遮挡度:
+     *
      * @param file -
      * @return - null代表正常
      */
-    public static String imageOcclusion(MultipartFile file){
+    public static String imageOcclusion(MultipartFile file) {
         logger.info("【遮挡度检测】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             return "未检测到人脸！";
         }
         long matAddr = mat.getNativeObjAddr();
@@ -136,37 +140,37 @@ public class BaiduOfflineUtils {
 
         float occlu = 0.1f;
         // 左眼遮挡置信度分值
-        if (occlList[0].leftEye > occlu){
+        if (occlList[0].leftEye > occlu) {
             System.out.println("left_eye occlu score is:" + occlList[0].leftEye);
             return "检测到左眼遮挡置";
         }
         // 右眼遮挡置信度分值
-        if (occlList[0].rightEye > occlu){
+        if (occlList[0].rightEye > occlu) {
             System.out.println("right_eye occlu score is:" + occlList[0].rightEye);
             return "检测到右眼遮挡置";
         }
         // 鼻子遮挡置信度分值
-        if (occlList[0].nose > occlu){
+        if (occlList[0].nose > occlu) {
             System.out.println("nose occlu score is:" + occlList[0].nose);
             return "检测到鼻子遮挡置";
         }
         // 嘴巴遮挡置信度分值
-        if (occlList[0].mouth > occlu){
+        if (occlList[0].mouth > occlu) {
             System.out.println("mouth occlu score is:" + occlList[0].mouth);
             return "检测到嘴巴遮挡置";
         }
         // 左脸遮挡置信度分值
-        if (occlList[0].leftCheek > occlu){
+        if (occlList[0].leftCheek > occlu) {
             System.out.println("left_cheek occlu score is:" + occlList[0].leftCheek);
             return "检测到左脸遮挡置";
         }
         // 右脸遮挡置信度分值
-        if (occlList[0].rightCheek > occlu){
+        if (occlList[0].rightCheek > occlu) {
             System.out.println("right_cheek occlu score is:" + occlList[0].rightCheek);
             return "检测到右脸遮挡置";
         }
         // 下巴遮挡置信度分值
-        if (occlList[0].chin > occlu){
+        if (occlList[0].chin > occlu) {
             System.out.println("chin occlu score is:" + occlList[0].chin);
             return "检测到下巴遮挡置";
         }
@@ -175,13 +179,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 光照检测
+     *
      * @param file -
      * @return -null代表正常
      */
-    public static String imageIllumination(MultipartFile file){
+    public static String imageIllumination(MultipartFile file) {
         logger.info("【光照检测】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             return "未检测到人脸！";
         }
         long matAddr = mat.getNativeObjAddr();
@@ -190,7 +195,7 @@ public class BaiduOfflineUtils {
             System.out.println("detect no face");
             return "未检测到人脸！";
         }
-        if (illuList[0] < 50){
+        if (illuList[0] < 50) {
             System.out.println("illumination score is:" + illuList[0]);
             return "光线过暗";
         }
@@ -199,13 +204,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 人脸属性
+     *
      * @param file -
      * @return -
      */
-    public static String imageAttr(MultipartFile file){
+    public static String imageAttr(MultipartFile file) {
         logger.info("【人脸属性】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             return null;
         }
         long matAddr = mat.getNativeObjAddr();
@@ -221,12 +227,13 @@ public class BaiduOfflineUtils {
 
     /**
      * rgb+depth深度特征值提取示例 (rgbd的特征值大小为1024个byte)
+     *
      * @param file -
      */
-    public static String imageRgbdFeature(MultipartFile file){
+    public static String imageRgbdFeature(MultipartFile file) {
         logger.info("【rgb+depth深度特征值提取示例 (rgbd的特征值大小为1024个byte）】");
         Mat rgbMat = FileUtils.convertMultipartFileToMat(file);
-        if (rgbMat == null){
+        if (rgbMat == null) {
             return null;
         }
         long matAddr = rgbMat.getNativeObjAddr();
@@ -243,12 +250,13 @@ public class BaiduOfflineUtils {
 
     /**
      * 特征值比较得分
+     *
      * @param str1 -
      * @param str2 -
      * @param type -
      * @return -
      */
-    public static float compareFeature(String str1, String str2, int type){
+    public static float compareFeature(String str1, String str2, int type) {
         logger.info("【特征值比较得分】");
         Feature f1 = JSON.parseObject(str1, Feature.class);
         Feature f2 = JSON.parseObject(str2, Feature.class);
@@ -258,13 +266,14 @@ public class BaiduOfflineUtils {
 
     /**
      * 抠图
+     *
      * @param file     -文件
      * @param fileName -图片路径(包含名称)
      */
-    public static String imageCrop(MultipartFile file, String fileName){
+    public static String imageCrop(MultipartFile file, String fileName) {
         logger.info("【人脸抠图】");
         Mat mat = FileUtils.convertMultipartFileToMat(file);
-        if (mat == null){
+        if (mat == null) {
             return "人脸图片转换异常";
         }
         long matAddr = mat.getNativeObjAddr();
@@ -282,15 +291,15 @@ public class BaiduOfflineUtils {
                 System.out.println("face crop fail");
                 return "人脸检测失败！";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             // 未检测到人脸或其他原因导致sdk无图片返回
             System.out.println("outMat empty exception");
             return "人脸检测失败！";
         }
         File fileTemp = new File(fileName);
         File parentFile = fileTemp.getParentFile();
-        if (!parentFile.exists()){
-            if(!parentFile.mkdirs()){
+        if (!parentFile.exists()) {
+            if (!parentFile.mkdirs()) {
                 System.out.println("创建文件夹异常！");
                 return "人脸检测异常！";
             }
