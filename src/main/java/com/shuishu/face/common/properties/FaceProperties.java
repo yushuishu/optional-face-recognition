@@ -188,18 +188,35 @@ public class FaceProperties {
             this.cropFilePath = filePath + "/crop";
         }
     }
-
     public String getOriginalFilePath() {
         if (originalFilePath == null && filePath != null) {
             originalFilePath = filePath + "/original";
         }
         return originalFilePath;
     }
-
     public String getCropFilePath() {
         if (cropFilePath == null && filePath != null) {
             cropFilePath = filePath + "/crop";
         }
         return cropFilePath;
     }
+
+
+
+    public Object getAutoApiProperties() {
+        if ("BAIDU_OFFLINE".equals(this.apiName)) {
+            return this.getBaiduOfflineProperties();
+        }
+        if ("BAIDU_ONLINE".equals(this.apiName)) {
+            return this.getBaiduOnlineProperties();
+        }
+        if ("MEGVII".equals(this.apiName)) {
+            return this.getMegviiProperties();
+        }
+        if ("ARC_SOFT".equals(this.apiName)) {
+            return this.getArcSoftProperties();
+        }
+        return null;
+    }
+
 }

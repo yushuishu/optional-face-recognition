@@ -75,11 +75,9 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
             throw new BusinessException("获取人脸属性值异常");
         }
         Attribute attribute = attributeList.get(0);
-
         FaceBO faceBO = new FaceBO();
         faceBO.setAge(attribute.age);
         faceBO.setGender(attribute.gender);
-
         // 获取特征值
         String featureJson = BaiduOfflineUtils.imageRgbdFeature(multipartFile);
         if (featureJson == null) {
@@ -91,11 +89,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         }
         faceBO.setFeatureSize(feature.size);
         faceBO.setFeatureByte(feature.data);
-        // byte[] 转 string
         faceBO.setFeatureData(JSONB.toJSONString(feature.data));
-        faceBO.setCreateApiName(faceProperties.getApiName());
-        faceBO.setUpdateApiName(faceProperties.getApiName());
-
         // 重新生成保存的图片全名称
         String imageFullName = FileUtils.generateImageName(multipartFile, barcode, libraryCode);
         // 保存原始人脸图片
@@ -164,17 +158,18 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         if (!StringUtils.hasText(imageRgbdFeatureJson)) {
             throw new BusinessException("人脸识别失败");
         }
-
+        Feature feature = JSON.parseObject(imageRgbdFeatureJson, Feature.class);
+        // 配置信息
         FaceProperties.BaiduOfflineProperties baiduOfflineProperties = faceProperties.getBaiduOfflineProperties();
+        // 响应结果
         List<FaceBO> faceBOList = new ArrayList<>();
-
         // 与 数据库所有特征值 比较
         Set<Map.Entry<Long, Integer>> entries = faceFeatureSizeMap.entrySet();
         for (Map.Entry<Long, Integer> entry : entries) {
             Feature tempFeature = new Feature();
             tempFeature.size = entry.getValue();
             tempFeature.data = faceFeatureMap.get(entry.getKey());
-            float compareFeature = BaiduOfflineUtils.compareFeature(imageRgbdFeatureJson, JSON.toJSONString(tempFeature, JSONWriter.Feature.WriteNullStringAsEmpty), 0);
+            float compareFeature = BaiduOfflineUtils.compareFeature(feature, tempFeature, 0);
             if (compareFeature >= baiduOfflineProperties.getRecognitionMinThreshold()) {
                 FaceBO faceBO = new FaceBO();
                 faceBO.setFaceId(entry.getKey());
@@ -190,9 +185,9 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         if (fileOne == null || fileTwo == null) {
             throw new BusinessException("人脸比对，必须两种照片");
         }
-        String imageRgbdFeatureJson1 = BaiduOfflineUtils.imageRgbdFeature(fileOne);
-        String imageRgbdFeatureJson2 = BaiduOfflineUtils.imageRgbdFeature(fileTwo);
-        return BaiduOfflineUtils.compareFeature(imageRgbdFeatureJson1, imageRgbdFeatureJson2, 0);
+        String featureJson1 = BaiduOfflineUtils.imageRgbdFeature(fileOne);
+        String featureJson2 = BaiduOfflineUtils.imageRgbdFeature(fileTwo);
+        return BaiduOfflineUtils.compareFeature(featureJson1, featureJson2, 0);
     }
 
 

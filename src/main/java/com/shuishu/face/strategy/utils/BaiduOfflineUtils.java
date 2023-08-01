@@ -260,8 +260,26 @@ public class BaiduOfflineUtils {
         logger.info("【特征值比较得分】");
         Feature f1 = JSON.parseObject(str1, Feature.class);
         Feature f2 = JSON.parseObject(str2, Feature.class);
-        float v = Face.compareFeature(f1, f2, type);
-        return v;
+        if (f1.data == null || f1.data.length == 0 || f2.data == null || f2.data.length == 0) {
+            return 0;
+        }
+        return Face.compareFeature(f1, f2, type);
+    }
+
+    /**
+     * 特征值比较得分
+     *
+     * @param feature1 -feature1
+     * @param feature2 -feature2
+     * @param type -
+     * @return -
+     */
+    public static float compareFeature(Feature feature1, Feature feature2, int type) {
+        logger.info("【特征值比较得分】");
+        if (feature1 == null || feature2 == null || feature1.data == null || feature1.data.length == 0 || feature2.data == null || feature2.data.length == 0) {
+            return 0;
+        }
+        return Face.compareFeature(feature1, feature2, type);
     }
 
     /**

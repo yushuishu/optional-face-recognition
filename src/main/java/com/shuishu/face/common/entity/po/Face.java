@@ -33,6 +33,7 @@ public class Face extends BasePO {
     @Comment("人脸id")
     private Long faceId;
 
+    @Column(nullable = false)
     @Comment("读者条码")
     private String barcode;
 
@@ -42,18 +43,23 @@ public class Face extends BasePO {
     @Comment("性别")
     private Integer gender;
 
+    @Column(nullable = false, unique = true)
     @Comment("特征值大小")
     private Integer featureSize;
 
+    @Column(nullable = false, unique = true)
     @Comment("特征值byte")
     private byte[] featureByte;
 
+    @Column(nullable = false, unique = true)
     @Comment("特征值string")
     private String featureData;
 
+    @Column(nullable = false, unique = true)
     @Comment("原图片url")
     private String originalImageUrl;
 
+    @Column(nullable = false, unique = true)
     @Comment("剪切图片url")
     private String cropImageUrl;
 
@@ -78,9 +84,11 @@ public class Face extends BasePO {
     @Comment("采集人脸的设备序列号")
     private String deviceSerialNumber;
 
+    @Column(nullable = false)
     @Comment("采集人脸使用的API")
     private String createApiName;
 
+    @Column(nullable = false)
     @Comment("更新人脸使用的API")
     private String updateApiName;
 
