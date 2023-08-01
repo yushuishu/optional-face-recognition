@@ -202,21 +202,4 @@ public class FaceProperties {
     }
 
 
-
-    public Object getAutoApiProperties() {
-        if ("BAIDU_OFFLINE".equals(this.apiName)) {
-            return this.getBaiduOfflineProperties();
-        }
-        if ("BAIDU_ONLINE".equals(this.apiName)) {
-            return this.getBaiduOnlineProperties();
-        }
-        if ("MEGVII".equals(this.apiName)) {
-            return this.getMegviiProperties();
-        }
-        if ("ARC_SOFT".equals(this.apiName)) {
-            return this.getArcSoftProperties();
-        }
-        return null;
-    }
-
 }
