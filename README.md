@@ -30,11 +30,22 @@ http://localhost:8080/doc.html
 
 3、部署启动
 
-### 不同SDK介绍
+### 不同SDK介绍（版本、价格）
 
 #### 百度
 
-https://cloud.baidu.com/campaign/PromotionActivity/index.html?track=navigationA
+分为在线版和离线版。
+
+在线版是通过调用URL接口识别检测的，无需本地SDK，图片可保存在百度云人脸库，每天有限制调用次数，不过开发测试阶段无需担心，每个账号的QPS量还是非常给力的，花钱购买比较贵一些。
+
+
+
+离线版启动项目需要SDK，并且是单台设备激活，多台设备激活需要购买多个激活码。离线版的购买，套餐价格比较贵，购买数量是100个起购，如果想要购买一个（一台设备）激活码，比如在开发阶段，想要在本机使用，就只能通过活动来购买。
+
+百度离线SDK购买（普通）：
+
+
+百度离线SDK购买（活动）：https://cloud.baidu.com/campaign/PromotionActivity/index.html?track=navigationA
 
 ![baidu-01](https://github.com/yushuishu/optional-face-recognition/assets/50919172/a20df648-3984-4fd1-bb20-531c3461c7fb)
 
