@@ -11,6 +11,7 @@ import com.shuishu.face.common.entity.bo.FaceBO;
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.common.utils.FileUtils;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
+import com.shuishu.face.strategy.utils.ArcSoftProUtils;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,8 @@ import java.util.Map;
 public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
     private FaceProperties faceProperties;
     private Logger logger;
+    private FaceEngine faceEngine;
+
 
     public ArcSoftProFaceServiceImpl(FaceProperties faceProperties, Logger logger) {
         this.faceProperties = faceProperties;
@@ -114,6 +117,7 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
         logger.info("初始化引擎errorCode：{}", responseCode);
         VersionInfo version = faceEngine.getVersion();
         logger.info("版本：{}", version);
+        this.faceEngine = faceEngine;
 
         logger.info("======================================= 服务初始化结束 =======================================");
     }
@@ -121,8 +125,10 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
     @Override
     public FaceBO addFace(String libraryCode, String barcode, MultipartFile multipartFile) {
         // 校验检测人脸
+        List<FaceInfo> faceInfoList = ArcSoftProUtils.imageDetect(faceEngine, multipartFile);
 
         // 获取人脸属性
+
 
         FaceBO faceBO = new FaceBO();
 
