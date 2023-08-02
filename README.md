@@ -36,12 +36,14 @@ http://localhost:8080/doc.html
 
 https://cloud.baidu.com/campaign/PromotionActivity/index.html?track=navigationA
 
+![baidu-01](https://github.com/yushuishu/optional-face-recognition/assets/50919172/a20df648-3984-4fd1-bb20-531c3461c7fb)
 
 
 #### 虹软
 
 https://ai.arcsoft.com.cn/manual/docs#/211
 
+![hongruan-01](https://github.com/yushuishu/optional-face-recognition/assets/50919172/0a760eec-6f6e-4970-bf77-9095ea15ba94)
 
 
 
