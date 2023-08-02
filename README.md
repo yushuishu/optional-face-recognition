@@ -8,27 +8,15 @@
   <a href="https://www.faceplusplus.com.cn/"><img src="https://img.shields.io/badge/MegviiFaceSDK-=3.0-violet.svg" alt="MegviiFaceSDK compatility"></a>
 </p>
 
+
 ## 介绍
 
 项目基于 [springboot@3.0.5](https://spring.io/projects/spring-boot) 系列开发，开发环境使用 [jdk@17.x](https://www.oracle.com/java/technologies/downloads/#java17)。
 
-适配百度、虹软、旷视人脸识别SDK
+适配百度、虹软、旷视人脸识别SDK。
 
-## 预览
+PS：因为虹软的免费版功能限制比较少，所以本项目直接适配增值版的SDK（收费版）。
 
-## 项目结构说明
-
-## 接口文档
-
-http://localhost:8080/doc.html
-
-## 使用
-
-1、打包
-
-2、修改配置文件
-
-3、部署启动
 
 ### 不同SDK介绍（版本、价格）
 
@@ -54,7 +42,6 @@ http://localhost:8080/doc.html
 
 ![badiu-02](https://github.com/yushuishu/optional-face-recognition/assets/50919172/f8192839-1c59-466b-808f-ec02c60f3dbc)
 
-
 百度离线SDK购买（活动方式）：https://cloud.baidu.com/campaign/PromotionActivity/index.html?track=navigationA
 
 ![baidu-01](https://github.com/yushuishu/optional-face-recognition/assets/50919172/a20df648-3984-4fd1-bb20-531c3461c7fb)
@@ -67,10 +54,56 @@ https://ai.arcsoft.com.cn/manual/docs#/211
 ![hongruan-01](https://github.com/yushuishu/optional-face-recognition/assets/50919172/0a760eec-6f6e-4970-bf77-9095ea15ba94)
 
 
-
 #### 旷视
 
 
+## 预览
+
+
+## 项目结构说明
+
+```text
+project  
+├─lib                                       # OpenCV和虹软的jar包
+├─src
+│  └─main
+│      ├─java
+│      │  └─com
+│      │      ├─jni                         # 百度离线版，native和使用示例
+│      │      └─shuishu
+│      │          └─face
+│      │              ├─common
+│      │              │  ├─config           # 工程基本配置：全局异常、jdbc、jpa
+│      │              │  ├─dsl              # 实体DSL
+│      │              │  ├─entity           # 实体PO、DTO、VO、BO
+│      │              │  ├─enums            # 枚举
+│      │              │  ├─properties       # yml配置类
+│      │              │  ├─repository       # 实体jpa
+│      │              │  └─utils            # 工具公共类
+│      │              ├─controller          # URL接口
+│      │              ├─service             # 业务接口
+│      │              └─strategy            # 人脸识别产品业务接口（工厂策略设计模式）
+│      └─resources
+│          └─lib
+│              └─opencv                     # opencv.dll库文件
+```
+
+
+## 接口文档
+
+http://localhost:8080/doc.html
+
+
+## 使用
+
+1、打包（jar）
+
+2、修改配置文件（指定使用的产品SDK）
+
+3、启动（指定加载使用的配置文件）
+```shell
+nohup java -jar --spring.config.location=application.yml >/dev/null 2>&1 &
+```
 
 
 ## 引用
