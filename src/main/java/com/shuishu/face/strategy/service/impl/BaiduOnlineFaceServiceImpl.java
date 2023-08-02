@@ -18,7 +18,7 @@ import java.util.Map;
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：百度在线人脸识别接口
+ * @Description ：百度（在线版）SDK 操作接口
  * <p></p>
  */
 public class BaiduOnlineFaceServiceImpl implements FaceRecognitionService {
@@ -35,7 +35,7 @@ public class BaiduOnlineFaceServiceImpl implements FaceRecognitionService {
 
     @Override
     public void initialize() {
-        logger.info("开始初始化：百度在线服务");
+        logger.info("================================= 开始初始化：百度（在线版）服务 =================================");
         if (faceProperties == null || !StringUtils.hasText(faceProperties.getApiName()) || faceProperties.getAllowedMultipleBinding() == null ||
                 faceProperties.getFilePath() == null || faceProperties.getBaiduOnlineProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
@@ -45,7 +45,7 @@ public class BaiduOnlineFaceServiceImpl implements FaceRecognitionService {
                 baiduOnlineProperties.getBlur() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-        logger.info("服务初始化结束");
+        logger.info("======================================= 服务初始化结束 =======================================");
     }
 
     @Override

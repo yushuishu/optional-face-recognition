@@ -3,11 +3,7 @@ package com.shuishu.face.strategy;
 
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
-import com.shuishu.face.strategy.service.impl.ArcSoftFaceServiceImpl;
-import com.shuishu.face.strategy.service.impl.BaiduOfflineFaceServiceImpl;
-import com.shuishu.face.strategy.service.impl.BaiduOnlineFaceServiceImpl;
-import com.shuishu.face.strategy.service.impl.MegviiFaceServiceImpl;
-import org.slf4j.Logger;
+import com.shuishu.face.strategy.service.impl.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,8 +31,8 @@ public class FaceRecognitionServiceFactory {
             case "MEGVII":
                 faceRecognitionService = new MegviiFaceServiceImpl(faceProperties, LoggerFactory.getLogger(MegviiFaceServiceImpl.class));
                 break;
-            case "ARC_SOFT":
-                faceRecognitionService = new ArcSoftFaceServiceImpl(faceProperties, LoggerFactory.getLogger(ArcSoftFaceServiceImpl.class));
+            case "ARC_SOFT_PRO":
+                faceRecognitionService = new ArcSoftProFaceServiceImpl(faceProperties, LoggerFactory.getLogger(ArcSoftProFaceServiceImpl.class));
                 break;
             default:
                 throw new IllegalArgumentException("无效的人脸识别API名称。");

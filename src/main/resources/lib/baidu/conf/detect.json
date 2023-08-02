@@ -1,6 +1,0 @@
-{
-    "max_detect_num":10,
-    "min_face_size":0, 
-    "scale_ratio":-1,
-    "not_face_thr":0.5
-}

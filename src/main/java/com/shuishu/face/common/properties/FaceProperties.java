@@ -44,14 +44,19 @@ public class FaceProperties {
     private String cropFilePath;
 
 
+
     /**
-     * 虹软
+     * 虹软（增值版）
      */
-    private ArcSoftProperties arcSoftProperties;
+    private ArcSoftProProperties arcSoftProProperties;
     @Setter
     @Getter
     @ToString
-    public static class ArcSoftProperties {
+    public static class ArcSoftProProperties {
+        /**
+         * sdk 库
+         */
+        private String libPath;
         /**
          * 识别阙值
          */
@@ -61,17 +66,21 @@ public class FaceProperties {
          */
         private Float bindingMinThreshold;
         /**
+         * 激活文件路径
+         */
+        private String activeFilePath;
+        /**
+         * activeKey
+         */
+        private String activeKey;
+        /**
          * appId
          */
         private String appId;
         /**
-         * apiKey
+         * sdkKey
          */
-        private String apiKey;
-        /**
-         * secretKey
-         */
-        private String secretKey;
+        private String sdkKey;
         /**
          * 模糊度
          */
@@ -86,6 +95,10 @@ public class FaceProperties {
     @Getter
     @ToString
     public static class BaiduOfflineProperties {
+        /**
+         * sdk 库
+         */
+        private String libPath;
         /**
          * 识别阙值
          */

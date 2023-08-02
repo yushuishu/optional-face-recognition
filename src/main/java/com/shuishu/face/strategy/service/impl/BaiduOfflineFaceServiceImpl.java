@@ -29,7 +29,7 @@ import java.util.Set;
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：百度离线人脸识别接口
+ * @Description ：百度（离线版）SDK 操作接口
  * <p></p>
  */
 public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
@@ -47,7 +47,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
 
     @Override
     public void initialize() {
-        logger.info("开始初始化：百度离线服务");
+        logger.info("================================= 开始初始化：百度（离线版）服务 =================================");
         if (faceProperties == null || !StringUtils.hasText(faceProperties.getApiName()) || faceProperties.getAllowedMultipleBinding() == null ||
                 faceProperties.getFilePath() == null || faceProperties.getBaiduOfflineProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
@@ -58,12 +58,12 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
 
-        logger.info("服务初始化结束");
+        logger.info("======================================= 服务初始化结束 =======================================");
     }
 
     @Override
     public FaceBO addFace(String libraryCode, String barcode, MultipartFile multipartFile) {
-        // 校验人脸属性
+        // 校验检测人脸
         FaceBox faceBox = verifyFaceDetect(multipartFile, true);
         // 获取人脸属性
         String imageAttrJson = BaiduOfflineUtils.imageAttr(multipartFile);

@@ -18,7 +18,7 @@ import java.util.Map;
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：旷视人脸识别接口
+ * @Description ：旷视（在线版）SDK 操作接口
  * <p></p>
  */
 public class MegviiFaceServiceImpl implements FaceRecognitionService {

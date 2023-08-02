@@ -1,18 +1,21 @@
 face:
   # true：允许多次注册 false：只能注册一次
   allowed-multiple-binding: true
-  # ARC_SOFT：虹软
+  # ARC_SOFT_PRO 虹软（增值版）
   # BAIDU_OFFLINE：百度离线SDK
   # BAIDU_ONLINE：百度在线SDK
   # MEGVII：旷视
   api-name: BAIDU_ONLINE
   #人脸图片本地保存路径
   file-path: D:\face
-  # 虹软
-  arc-soft:
-    api-key: uftvVlqW7XQDvyAqEz4Mp6q3
-    app-id: 25209037
-    secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
+  # 虹软（增值版）
+  arc-soft-pro:
+    lib-path: D:\face\sdk\arcsoft\ArcSoft_ArcFacePro_windows_x64_java_V4.1\libs\WIN64
+    # 离线激活文件(含后缀)
+    active-file-path: D:\face\sdk\arcsoft\ArcSoft_ArcFacePro_windows_x64_java_V4.1\libs\WIN64\active_config.txt
+    active-key: 86L1-11KF-7133-KUF4
+    app-id: 3j8upsbqbrcZpqgvbKFZHDYJkzYk74h65G5KxJ3WqBRT
+    sdk-key: A73GwQDShHH5vh5EJcEg8cnuqL82Bv2d6cZZwVerrvTW
     # 绑定得分阈值（0-100）
     binding-min-threshold: 80
     # 识别得分阈值（0-100）
@@ -21,6 +24,7 @@ face:
     blur: 0.7
   # 百度
   baidu-offline:
+    lib-path: D:\face\sdk\baidu
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
     secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
