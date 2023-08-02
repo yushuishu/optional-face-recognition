@@ -24,6 +24,30 @@ http://localhost:8080/doc.html
 
 ## 使用
 
+1、打包
+
+2、修改配置文件
+
+3、部署启动
+
+### 不同SDK介绍
+
+#### 百度
+
+https://cloud.baidu.com/campaign/PromotionActivity/index.html?track=navigationA
+
+
+
+#### 虹软
+
+https://ai.arcsoft.com.cn/manual/docs#/211
+
+
+
+
+#### 旷视
+
+
 
 
 ## 引用
