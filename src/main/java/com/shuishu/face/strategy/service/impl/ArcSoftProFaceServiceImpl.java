@@ -2,17 +2,21 @@ package com.shuishu.face.strategy.service.impl;
 
 
 import cn.hutool.core.io.file.FileNameUtil;
+import com.alibaba.fastjson2.JSON;
 import com.arcsoft.face.*;
 import com.arcsoft.face.enums.DetectMode;
 import com.arcsoft.face.enums.DetectOrient;
 import com.arcsoft.face.enums.ErrorInfo;
+import com.arcsoft.face.toolkit.ImageInfo;
 import com.shuishu.face.common.config.exception.BusinessException;
 import com.shuishu.face.common.entity.bo.FaceBO;
+import com.shuishu.face.common.entity.bo.arc.AttributeBO;
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.common.utils.FileUtils;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import com.shuishu.face.strategy.utils.ArcSoftProUtils;
 import org.slf4j.Logger;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -124,24 +128,41 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
 
     @Override
     public FaceBO addFace(String libraryCode, String barcode, MultipartFile multipartFile) {
+        ImageInfo imageInfo = ArcSoftProUtils.getImageInfo(multipartFile);
         // 校验检测人脸
-        List<FaceInfo> faceInfoList = ArcSoftProUtils.imageDetect(faceEngine, multipartFile);
-
+        List<FaceInfo> faceInfoList = ArcSoftProUtils.imageDetect(faceEngine, imageInfo);
+        if (faceInfoList.size() > 1) {
+            throw new BusinessException("检测到多张人脸");
+        }
+        FaceInfo faceInfo = faceInfoList.get(0);
         // 获取人脸属性
-
-
+        AttributeBO attributeBO = ArcSoftProUtils.imageAttr(faceEngine, imageInfo, faceInfo);
         FaceBO faceBO = new FaceBO();
-
+        faceBO.setAge(attributeBO.age);
+        faceBO.setGender(attributeBO.gender);
         // 获取特征值
-
+        FaceFeature faceFeature = ArcSoftProUtils.imageFeature(faceEngine, imageInfo, faceInfo, 2);
+        faceBO.setFeatureSize(faceFeature.getFeatureData().length);
+        faceBO.setFeatureByte(faceFeature.getFeatureData());
+        faceBO.setFeatureData(JSON.toJSONString(faceFeature.getFeatureData()));
         // 重新生成保存的图片全名称
-
+        String imageFullName = FileUtils.generateImageName(multipartFile, barcode, libraryCode);
         // 保存原始人脸图片
-
+        String originalImagePath = faceProperties.getOriginalFilePath() + "/" + imageFullName;
+        boolean saveFile = FileUtils.saveFile(originalImagePath, multipartFile);
+        if (!saveFile) {
+            throw new BusinessException("保存人脸图片异常");
+        }
+        faceBO.setOriginalImageUrl(originalImagePath);
         // 人脸图片剪切
-
+        String cropImagePath = faceProperties.getCropFilePath() + "/" + imageFullName;
+        Rect rect = faceInfo.getRect();
+        boolean imageCut = FileUtils.imageCut(multipartFile, cropImagePath, rect.getLeft(), rect.getTop(), (rect.getRight() - rect.getLeft()), (rect.getBottom() - rect.getTop()));
+        if (!imageCut) {
+            throw new BusinessException("剪切人脸图片异常");
+        }
         // 保存剪切后的人脸图片
-
+        faceBO.setCropImageUrl(cropImagePath);
         return faceBO;
     }
 

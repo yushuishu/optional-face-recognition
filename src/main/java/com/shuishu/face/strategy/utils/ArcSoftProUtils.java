@@ -1,13 +1,13 @@
 package com.shuishu.face.strategy.utils;
 
 
-import com.alibaba.fastjson2.JSON;
 import com.arcsoft.face.*;
 import com.arcsoft.face.enums.ErrorInfo;
 import com.arcsoft.face.enums.ExtractType;
 import com.arcsoft.face.toolkit.ImageFactory;
 import com.arcsoft.face.toolkit.ImageInfo;
 import com.shuishu.face.common.config.exception.BusinessException;
+import com.shuishu.face.common.entity.bo.arc.AttributeBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -178,7 +178,7 @@ public class ArcSoftProUtils {
      * @param featureData2 -特征值2
      * @return -
      */
-    private static float compareFeature(FaceEngine faceEngine, byte[] featureData1, byte[] featureData2) {
+    public static float compareFeature(FaceEngine faceEngine, byte[] featureData1, byte[] featureData2) {
         if (featureData1 == null || featureData1.length == 0 || featureData2 == null || featureData2.length == 0) {
             throw new BusinessException("人脸比对失败");
         }
@@ -193,7 +193,14 @@ public class ArcSoftProUtils {
         return 0;
     }
 
-    public static void imageFun(FaceEngine faceEngine, ImageInfo imageInfo, FaceInfo faceInfo) {
+    /**
+     * 人脸属性检测
+     *
+     * @param faceEngine -
+     * @param imageInfo -
+     * @param faceInfo -
+     */
+    public static AttributeBO imageAttr(FaceEngine faceEngine, ImageInfo imageInfo, FaceInfo faceInfo) {
         FunctionConfiguration functionConfiguration = new FunctionConfiguration();
         functionConfiguration.setSupportAge(true);
         functionConfiguration.setSupportGender(true);
@@ -201,8 +208,75 @@ public class ArcSoftProUtils {
         functionConfiguration.setSupportMaskDetect(true);
         int code = faceEngine.process(imageInfo, Collections.singletonList(faceInfo), functionConfiguration);
         if (code  != ErrorInfo.MOK.getValue()) {
-
+            throw new BusinessException("人脸属性检测失败");
         }
+
+        AttributeBO attributeBO = new AttributeBO();
+
+        //性别检测
+        List<GenderInfo> genderInfoList = new ArrayList<>();
+        code = faceEngine.getGender(genderInfoList);
+        if (code  != ErrorInfo.MOK.getValue()) {
+            logger.error("性别检测失败：" + code);
+        }
+        if (genderInfoList.size() == 0) {
+            logger.error("性别检测失败：" + code);
+        } else {
+            int gender = genderInfoList.get(0).getGender();
+            logger.info("性别：{}", gender);
+            if (gender == 0) {
+                // 男
+                attributeBO.gender = 1;
+            } else if (gender == 1) {
+                // 女
+                attributeBO.gender = 0;
+            }
+        }
+
+        //年龄检测
+        List<AgeInfo> ageInfoList = new ArrayList<>();
+        code = faceEngine.getAge(ageInfoList);
+        if (code  != ErrorInfo.MOK.getValue()) {
+            logger.error("年龄检测失败：" + code);
+        }
+        if (ageInfoList.size() == 0) {
+            logger.error("年龄检测失败：" + code);
+        } else {
+            logger.info("年龄：{}", ageInfoList.get(0).getAge());
+            attributeBO.age = ageInfoList.get(0).getAge();
+        }
+
+        //活体检测
+        List<LivenessInfo> livenessInfoList = new ArrayList<>();
+        code = faceEngine.getLiveness(livenessInfoList);
+        if (code  != ErrorInfo.MOK.getValue()) {
+            logger.error("活体检测失败：" + code);
+        } else {
+            if (livenessInfoList.size() == 0) {
+                logger.error("活体检测失败：" + code);
+            } else {
+                int liveness = livenessInfoList.get(0).getLiveness();
+                logger.info("活体：{}", liveness);
+                attributeBO.liveness = liveness;
+            }
+        }
+
+        //口罩检测
+        List<MaskInfo> maskInfoList = new ArrayList<>();
+        code = faceEngine.getMask(maskInfoList);
+        if (code  != ErrorInfo.MOK.getValue()) {
+            logger.error("口罩检测失败：" + code);
+        } else {
+            if (maskInfoList.size() == 0) {
+                logger.error("口罩检测失败：" + code);
+            } else {
+                int mask = maskInfoList.get(0).getMask();
+                logger.info("口罩：{}", mask);
+                attributeBO.mask = mask;
+            }
+        }
+
+        return attributeBO;
     }
 
 
