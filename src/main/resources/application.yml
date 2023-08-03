@@ -5,12 +5,12 @@ face:
   # BAIDU_OFFLINE：百度离线SDK
   # BAIDU_ONLINE：百度在线SDK
   # MEGVII：旷视
-  api-name: BAIDU_OFFLINE
+  api-name: ARC_SOFT_PRO
   #人脸图片本地保存路径
   file-path: D:\face
   # 虹软（增值版）
   arc-soft-pro:
-    lib-path: D:\face\sdk\arcsoft\ArcSoft_ArcFacePro_windows_x64_java_V4.1\libs\WIN64
+    lib-path: D:\itlike\workSpace\Java\face\sdk\ArcSoft_ArcFacePro_windows_x64_java_V4.1\libs\WIN64
     # 离线激活文件(含后缀)
     active-file-path: D:\face\sdk\arcsoft\ArcSoft_ArcFacePro_windows_x64_java_V4.1\libs\WIN64\active_config.txt
     active-key: 86L1-11KF-7133-KUF4

@@ -119,7 +119,7 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
 
         //初始化引擎
         responseCode = faceEngine.init(engineConfiguration);
-        logger.info("初始化引擎errorCode：{}", responseCode);
+        logger.info("初始化引擎responseCode：{}", responseCode);
         VersionInfo version = faceEngine.getVersion();
         logger.info("版本：{}", version);
         this.faceEngine = faceEngine;
