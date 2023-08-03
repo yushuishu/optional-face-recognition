@@ -5,7 +5,7 @@ face:
   # BAIDU_OFFLINE：百度离线SDK
   # BAIDU_ONLINE：百度在线SDK
   # MEGVII：旷视
-  api-name: BAIDU_ONLINE
+  api-name: BAIDU_OFFLINE
   #人脸图片本地保存路径
   file-path: D:\face
   # 虹软（增值版）
@@ -24,7 +24,7 @@ face:
     blur: 0.7
   # 百度
   baidu-offline:
-    lib-path: D:\face\sdk\baidu
+    lib-path: D:\itlike\workSpace\Java\face\sdk\Baidu_Face_Offline_SDK_Windows_Java_8.3\Baidu_Face_Offline_SDK_Windows_Java_8.3
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
     secret-key: SoCpMnb5LumIHz0OefCx8K1DmBEibHDG
@@ -68,9 +68,9 @@ spring:
     resources:
       static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${face.file-path}
   datasource:
-    url: jdbc:postgresql://192.168.1.12:5432/face_dev?useUnicode=true&characterEncoding=utf8
+    url: jdbc:postgresql://127.0.0.1:5432/face_dev?useUnicode=true&characterEncoding=utf8
     username: postgres
-    password: 1
+    password: 123456
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:

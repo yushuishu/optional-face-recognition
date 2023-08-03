@@ -4,12 +4,13 @@ package com.shuishu.face.strategy.service.impl;
 import cn.hutool.core.io.file.FileNameUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONB;
-import com.alibaba.fastjson2.JSONWriter;
+import com.jni.face.Face;
 import com.jni.struct.Attribute;
 import com.jni.struct.FaceBox;
 import com.jni.struct.Feature;
 import com.shuishu.face.common.config.exception.BusinessException;
 import com.shuishu.face.common.entity.bo.FaceBO;
+import com.shuishu.face.common.properties.BaiduOfflineProperties;
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.common.utils.FileUtils;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
@@ -48,16 +49,27 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
     @Override
     public void initialize() {
         logger.info("================================= 开始初始化：百度（离线版）服务 =================================");
+        System.out.println(faceProperties);
         if (faceProperties == null || !StringUtils.hasText(faceProperties.getApiName()) || faceProperties.getAllowedMultipleBinding() == null ||
                 faceProperties.getFilePath() == null || faceProperties.getBaiduOfflineProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-        FaceProperties.BaiduOfflineProperties baiduOfflineProperties = faceProperties.getBaiduOfflineProperties();
+        BaiduOfflineProperties baiduOfflineProperties = faceProperties.getBaiduOfflineProperties();
         if (baiduOfflineProperties.getBindingMinThreshold() == null || baiduOfflineProperties.getRecognitionMinThreshold() == null ||
                 baiduOfflineProperties.getBlur() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
 
+        //System.load(baiduOfflineProperties.getLibPath() + "/BaiduFaceApi.dll");
+        Face face = new Face();
+        int res = face.sdkInit(baiduOfflineProperties.getLibPath());
+        if (res != 0) {
+            throw new BusinessException("sdk初始化失败，error = " + res);
+        }
+        // 获取设备指纹
+        logger.info("设备指纹：{}", Face.getDeviceId());
+        // 获取版本号
+        logger.info("版本号：{}", Face.sdkVersion());
         logger.info("======================================= 服务初始化结束 =======================================");
     }
 
@@ -160,7 +172,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
         }
         Feature feature = JSON.parseObject(imageRgbdFeatureJson, Feature.class);
         // 配置信息
-        FaceProperties.BaiduOfflineProperties baiduOfflineProperties = faceProperties.getBaiduOfflineProperties();
+        BaiduOfflineProperties baiduOfflineProperties = faceProperties.getBaiduOfflineProperties();
         // 响应结果
         List<FaceBO> faceBOList = new ArrayList<>();
         // 与 数据库所有特征值 比较

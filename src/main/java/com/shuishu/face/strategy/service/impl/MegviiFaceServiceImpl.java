@@ -4,6 +4,7 @@ package com.shuishu.face.strategy.service.impl;
 import com.shuishu.face.common.config.exception.BusinessException;
 import com.shuishu.face.common.entity.bo.FaceBO;
 import com.shuishu.face.common.properties.FaceProperties;
+import com.shuishu.face.common.properties.MegviiProperties;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
@@ -40,7 +41,7 @@ public class MegviiFaceServiceImpl implements FaceRecognitionService {
                 faceProperties.getFilePath() == null || faceProperties.getMegviiProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-        FaceProperties.MegviiProperties megviiProperties = faceProperties.getMegviiProperties();
+        MegviiProperties megviiProperties = faceProperties.getMegviiProperties();
         if (megviiProperties.getBindingMinThreshold() == null || megviiProperties.getRecognitionMinThreshold() == null ||
                 megviiProperties.getBlur() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");

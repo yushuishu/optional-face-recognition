@@ -3,6 +3,7 @@ package com.shuishu.face.strategy.service.impl;
 
 import com.shuishu.face.common.config.exception.BusinessException;
 import com.shuishu.face.common.entity.bo.FaceBO;
+import com.shuishu.face.common.properties.BaiduOnlineProperties;
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class BaiduOnlineFaceServiceImpl implements FaceRecognitionService {
                 faceProperties.getFilePath() == null || faceProperties.getBaiduOnlineProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-        FaceProperties.BaiduOnlineProperties baiduOnlineProperties = faceProperties.getBaiduOnlineProperties();
+        BaiduOnlineProperties baiduOnlineProperties = faceProperties.getBaiduOnlineProperties();
         if (baiduOnlineProperties.getBindingMinThreshold() == null || baiduOnlineProperties.getRecognitionMinThreshold() == null ||
                 baiduOnlineProperties.getBlur() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");

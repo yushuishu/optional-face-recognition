@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.shuishu.face.common.enums.FaceEnum;
+import com.shuishu.face.common.properties.BaiduOnlineProperties;
 import com.shuishu.face.common.properties.FaceProperties;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class LocalCacheUtils {
         if (StringUtils.hasText(accessToken)) {
             return accessToken;
         }
-        FaceProperties.BaiduOnlineProperties baiduOnlineProperties = faceProperties.getBaiduOnlineProperties();
+        BaiduOnlineProperties baiduOnlineProperties = faceProperties.getBaiduOnlineProperties();
         // 官网获取的 API Key 更新为你注册的
         String clientId = baiduOnlineProperties.getAppId();
         // 官网获取的 Secret Key 更新为你注册的

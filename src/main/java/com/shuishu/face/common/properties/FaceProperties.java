@@ -1,6 +1,7 @@
 package com.shuishu.face.common.properties;
 
 
+import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,154 +45,28 @@ public class FaceProperties {
     private String cropFilePath;
 
 
-
     /**
      * 虹软（增值版）
      */
+    @Resource
     private ArcSoftProProperties arcSoftProProperties;
-    @Setter
-    @Getter
-    @ToString
-    public static class ArcSoftProProperties {
-        /**
-         * sdk 库
-         */
-        private String libPath;
-        /**
-         * 识别阙值
-         */
-        private Float recognitionMinThreshold;
-        /**
-         * 绑定阙值
-         */
-        private Float bindingMinThreshold;
-        /**
-         * 激活文件路径
-         */
-        private String activeFilePath;
-        /**
-         * activeKey
-         */
-        private String activeKey;
-        /**
-         * appId
-         */
-        private String appId;
-        /**
-         * sdkKey
-         */
-        private String sdkKey;
-        /**
-         * 模糊度
-         */
-        private Float blur;
-    }
-
     /**
      * 百度
      */
+    @Resource
     private BaiduOfflineProperties baiduOfflineProperties;
-    @Setter
-    @Getter
-    @ToString
-    public static class BaiduOfflineProperties {
-        /**
-         * sdk 库
-         */
-        private String libPath;
-        /**
-         * 识别阙值
-         */
-        private Float recognitionMinThreshold;
-        /**
-         * 绑定阙值
-         */
-        private Float bindingMinThreshold;
-        /**
-         * appId
-         */
-        private String appId;
-        /**
-         * apiKey
-         */
-        private String apiKey;
-        /**
-         * secretKey
-         */
-        private String secretKey;
-        /**
-         * 模糊度
-         */
-        private Float blur;
-    }
-
     /**
      * 百度
      */
+    @Resource
     private BaiduOnlineProperties baiduOnlineProperties;
-    @Setter
-    @Getter
-    @ToString
-    public static class BaiduOnlineProperties {
-        /**
-         * 识别阙值
-         */
-        private Float recognitionMinThreshold;
-        /**
-         * 绑定阙值
-         */
-        private Float bindingMinThreshold;
-        /**
-         * appId
-         */
-        private String appId;
-        /**
-         * apiKey
-         */
-        private String apiKey;
-        /**
-         * secretKey
-         */
-        private String secretKey;
-        /**
-         * 模糊度
-         */
-        private Float blur;
-    }
-
     /**
      * 旷视
      */
+    @Resource
     private MegviiProperties megviiProperties;
-    @Setter
-    @Getter
-    @ToString
-    public static class MegviiProperties {
-        /**
-         * 识别阙值
-         */
-        private Float recognitionMinThreshold;
-        /**
-         * 绑定阙值
-         */
-        private Float bindingMinThreshold;
-        /**
-         * appId
-         */
-        private String appId;
-        /**
-         * apiKey
-         */
-        private String apiKey;
-        /**
-         * secretKey
-         */
-        private String secretKey;
-        /**
-         * 模糊度
-         */
-        private Float blur;
-    }
+
+
 
 
     public void setFilePath(String filePath) {

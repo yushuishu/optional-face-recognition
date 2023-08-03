@@ -11,6 +11,7 @@ import com.arcsoft.face.toolkit.ImageInfo;
 import com.shuishu.face.common.config.exception.BusinessException;
 import com.shuishu.face.common.entity.bo.FaceBO;
 import com.shuishu.face.common.entity.bo.arc.AttributeBO;
+import com.shuishu.face.common.properties.ArcSoftProProperties;
 import com.shuishu.face.common.properties.FaceProperties;
 import com.shuishu.face.common.utils.FileUtils;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
@@ -56,7 +57,7 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
                 faceProperties.getFilePath() == null || faceProperties.getArcSoftProProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-        FaceProperties.ArcSoftProProperties arcSoftProProperties = faceProperties.getArcSoftProProperties();
+        ArcSoftProProperties arcSoftProProperties = faceProperties.getArcSoftProProperties();
         if (arcSoftProProperties.getBindingMinThreshold() == null || arcSoftProProperties.getRecognitionMinThreshold() == null ||
                 arcSoftProProperties.getBlur() == null || arcSoftProProperties.getAppId() == null ||arcSoftProProperties.getSdkKey() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
@@ -208,7 +209,7 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
         }
         FaceFeature faceFeature = ArcSoftProUtils.imageFeature(faceEngine, imageInfo, faceInfoList.get(0), 2);
         // 配置信息
-        FaceProperties.ArcSoftProProperties arcSoftProProperties = faceProperties.getArcSoftProProperties();
+        ArcSoftProProperties arcSoftProProperties = faceProperties.getArcSoftProProperties();
         // 响应结果
         List<FaceBO> faceBOList = new ArrayList<>();
         // 与 数据库所有特征值 比较
