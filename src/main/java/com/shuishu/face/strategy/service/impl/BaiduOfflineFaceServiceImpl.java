@@ -183,7 +183,7 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
     @Override
     public Float comparisonFace(MultipartFile fileOne, MultipartFile fileTwo) {
         if (fileOne == null || fileTwo == null) {
-            throw new BusinessException("人脸比对，必须两种照片");
+            throw new BusinessException("人脸比对，必须上传两张照片");
         }
         String featureJson1 = BaiduOfflineUtils.imageRgbdFeature(fileOne);
         String featureJson2 = BaiduOfflineUtils.imageRgbdFeature(fileTwo);

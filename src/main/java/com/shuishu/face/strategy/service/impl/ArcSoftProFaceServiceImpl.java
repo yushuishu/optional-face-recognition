@@ -16,7 +16,6 @@ import com.shuishu.face.common.utils.FileUtils;
 import com.shuishu.face.strategy.service.FaceRecognitionService;
 import com.shuishu.face.strategy.utils.ArcSoftProUtils;
 import org.slf4j.Logger;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author ：谁书-ss
@@ -128,14 +128,10 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
 
     @Override
     public FaceBO addFace(String libraryCode, String barcode, MultipartFile multipartFile) {
-        ImageInfo imageInfo = ArcSoftProUtils.getImageInfo(multipartFile);
         // 校验检测人脸
-        List<FaceInfo> faceInfoList = ArcSoftProUtils.imageDetect(faceEngine, imageInfo);
-        if (faceInfoList.size() > 1) {
-            throw new BusinessException("检测到多张人脸");
-        }
-        FaceInfo faceInfo = faceInfoList.get(0);
+        FaceInfo faceInfo = verifyFaceDetect(multipartFile, true);
         // 获取人脸属性
+        ImageInfo imageInfo = ArcSoftProUtils.getImageInfo(multipartFile);
         AttributeBO attributeBO = ArcSoftProUtils.imageAttr(faceEngine, imageInfo, faceInfo);
         FaceBO faceBO = new FaceBO();
         faceBO.setAge(attributeBO.age);
@@ -205,20 +201,58 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
             return null;
         }
         // 获取当前图片特征值
-
-        return null;
+        ImageInfo imageInfo = ArcSoftProUtils.getImageInfo(multipartFile);
+        List<FaceInfo> faceInfoList = ArcSoftProUtils.imageDetect(faceEngine, imageInfo);
+        if (faceInfoList.size() > 1) {
+            throw new BusinessException("检测到多张人脸");
+        }
+        FaceFeature faceFeature = ArcSoftProUtils.imageFeature(faceEngine, imageInfo, faceInfoList.get(0), 2);
+        // 配置信息
+        FaceProperties.ArcSoftProProperties arcSoftProProperties = faceProperties.getArcSoftProProperties();
+        // 响应结果
+        List<FaceBO> faceBOList = new ArrayList<>();
+        // 与 数据库所有特征值 比较
+        Set<Map.Entry<Long, Integer>> entries = faceFeatureSizeMap.entrySet();
+        for (Map.Entry<Long, Integer> entry : entries) {
+            byte[] data = faceFeatureMap.get(entry.getKey());
+            float compareFeature = ArcSoftProUtils.compareFeature(faceEngine, faceFeature.getFeatureData(), data);
+            if (compareFeature >= arcSoftProProperties.getRecognitionMinThreshold()) {
+                FaceBO faceBO = new FaceBO();
+                faceBO.setFaceId(entry.getKey());
+                faceBO.setScore(compareFeature);
+                faceBOList.add(faceBO);
+            }
+        }
+        return faceBOList;
     }
 
     @Override
     public Float comparisonFace(MultipartFile fileOne, MultipartFile fileTwo) {
+        if (fileOne == null || fileTwo == null) {
+            throw new BusinessException("人脸比对，必须上传两张照片");
+        }
+        FaceFeature faceFeature1 = ArcSoftProUtils.imageFeature(faceEngine, fileOne, 2);
+        FaceFeature faceFeature2 = ArcSoftProUtils.imageFeature(faceEngine, fileTwo, 2);
+        ArcSoftProUtils.compareFeature(faceEngine, faceFeature1.getFeatureData(), faceFeature2.getFeatureData());
         return null;
     }
 
 
-    private void verifyFaceDetect(MultipartFile file, boolean isBindingOperate) {
+    private FaceInfo verifyFaceDetect(MultipartFile file, boolean isBindingOperate) {
         // 先检测人脸可信度
+        List<FaceInfo> faceInfoList = ArcSoftProUtils.imageDetect(faceEngine, file);
+        if (faceInfoList.size() > 1) {
+            // 有多张人脸
+            throw new BusinessException("识别到多张人脸，请重新调整位置！");
+        }
+        FaceInfo faceInfo = faceInfoList.get(0);
+        // 光线校验
 
+        // 模糊度检测
 
+        // 遮挡度
+
+        return faceInfoList.get(0);
     }
 
 }

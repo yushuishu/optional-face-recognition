@@ -171,6 +171,37 @@ public class ArcSoftProUtils {
     }
 
     /**
+     * 人脸特征提取
+     *
+     * @param faceEngine -
+     * @param type -特征提取类型：1注册，2识别
+     * @return -
+     */
+    public static FaceFeature imageFeature(FaceEngine faceEngine, MultipartFile multipartFile, int type) {
+        ImageInfo imageInfo = getImageInfo(multipartFile);
+        verifyImageInfo(imageInfo);
+        List<FaceInfo> faceInfoList = imageDetect(faceEngine, imageInfo);
+        FaceInfo faceInfo = faceInfoList.get(0);
+        verifyFaceInfo(faceInfo);
+        FaceFeature faceFeature = new FaceFeature();
+        int code;
+        if (type == 1) {
+            // 注册特征提取
+            code = faceEngine.extractFaceFeature(imageInfo, faceInfo, ExtractType.REGISTER, 0, faceFeature);
+        } else if (type == 2) {
+            // 识别特征提取
+            code = faceEngine.extractFaceFeature(imageInfo, faceInfo, ExtractType.RECOGNIZE, 0, faceFeature);
+        } else {
+            throw new BusinessException("人脸特征值，提取类型错误");
+        }
+        if (code != ErrorInfo.MOK.getValue() || faceFeature.getFeatureData() == null || faceFeature.getFeatureData().length == 0) {
+            throw new BusinessException("人脸特征值，提取失败：" + code);
+        }
+        return faceFeature;
+    }
+
+
+    /**
      * 人脸特征值 比对
      *
      * @param faceEngine -
