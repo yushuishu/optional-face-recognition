@@ -13,7 +13,7 @@ import java.net.URL;
  * <p></p>
  * @Description ：
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.shuishu","com.jni"})
 public class OptionalFaceRecognitionApplication {
     public static void main(String[] args) {
         // 加载opencv.dll

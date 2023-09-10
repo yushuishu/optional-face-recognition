@@ -234,8 +234,7 @@ public class ArcSoftProFaceServiceImpl implements FaceRecognitionService {
         }
         FaceFeature faceFeature1 = ArcSoftProUtils.imageFeature(faceEngine, fileOne, 2);
         FaceFeature faceFeature2 = ArcSoftProUtils.imageFeature(faceEngine, fileTwo, 2);
-        ArcSoftProUtils.compareFeature(faceEngine, faceFeature1.getFeatureData(), faceFeature2.getFeatureData());
-        return null;
+        return ArcSoftProUtils.compareFeature(faceEngine, faceFeature1.getFeatureData(), faceFeature2.getFeatureData());
     }
 
 

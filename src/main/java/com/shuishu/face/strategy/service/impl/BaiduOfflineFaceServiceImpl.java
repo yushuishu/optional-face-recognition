@@ -49,7 +49,6 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
     @Override
     public void initialize() {
         logger.info("================================= 开始初始化：百度（离线版）服务 =================================");
-        System.out.println(faceProperties);
         if (faceProperties == null || !StringUtils.hasText(faceProperties.getApiName()) || faceProperties.getAllowedMultipleBinding() == null ||
                 faceProperties.getFilePath() == null || faceProperties.getBaiduOfflineProperties() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
@@ -59,8 +58,9 @@ public class BaiduOfflineFaceServiceImpl implements FaceRecognitionService {
                 baiduOfflineProperties.getBlur() == null) {
             throw new BusinessException("人脸配置信息对象失败（FaceProperties）");
         }
-
+        //System.load(baiduOfflineProperties.getLibPath() + "/opencv_java320.dll");
         //System.load(baiduOfflineProperties.getLibPath() + "/BaiduFaceApi.dll");
+
         Face face = new Face();
         int res = face.sdkInit(baiduOfflineProperties.getLibPath());
         if (res != 0) {
