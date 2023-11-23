@@ -37,7 +37,7 @@ public class FaceRecognitionServiceFactory {
             default:
                 throw new IllegalArgumentException("无效的人脸识别API名称。");
         }
-
+        // 为了尽量保持构造函数简洁，以及SDK可能失败的初始化步骤，放在外部方法initialize()中
         faceRecognitionService.initialize();
         return faceRecognitionService;
     }
