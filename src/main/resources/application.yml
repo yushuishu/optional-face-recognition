@@ -1,5 +1,5 @@
 face:
-  # true：允许多次注册 false：只能注册一次
+  # true：允许多次注册（保存多张人脸图片） false：只能注册一次（只能保存一张人脸图片）
   allowed-multiple-binding: true
   # ARC_SOFT_PRO 虹软（增值版）
   # BAIDU_OFFLINE：百度离线SDK
@@ -8,7 +8,7 @@ face:
   api-name: BAIDU_OFFLINE
   #人脸图片本地保存路径
   file-path: D:/face
-  # 虹软（增值版）
+  # 虹软（增值版-离线本地）
   arc-soft-pro:
     lib-path: D:/itlike/workSpace/Java/face/sdk/ArcSoft_ArcFacePro_windows_x64_java_V4.1/libs/WIN64
     # 离线激活文件(含后缀)
@@ -20,9 +20,9 @@ face:
     binding-min-threshold: 80
     # 识别得分阈值（0-100）
     recognition-min-threshold: 80
-    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
-    blur: 0.7
-  # 百度
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.6
+    blur: 0.6
+  # 百度（离线本地）
   baidu-offline:
     lib-path: D:/itlike/workSpace/Java/face/sdk/Baidu_Face_Offline_SDK_Windows_Java_8.3/Baidu_Face_Offline_SDK_Windows_Java_8.3
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
@@ -32,8 +32,9 @@ face:
     binding-min-threshold: 80
     # 识别得分阈值（0-100）
     recognition-min-threshold: 80
-    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
-    blur: 0.7
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.6
+    blur: 0.6
+  # 百度（线上百度云）
   baidu-online:
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
@@ -42,9 +43,9 @@ face:
     binding-min-threshold: 80
     # 识别得分阈值（0-100）
     recognition-min-threshold: 80
-    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
-    blur: 0.7
-  # 旷视
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.6
+    blur: 0.6
+  # 旷视（离线本地）
   megvii:
     api-key: uftvVlqW7XQDvyAqEz4Mp6q3
     app-id: 25209037
@@ -53,8 +54,8 @@ face:
     binding-min-threshold: 80
     # 识别得分阈值（0-100）
     recognition-min-threshold: 80
-    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.7
-    blur: 0.7
+    # 模糊度（0-1）0是最清晰，1是最模糊，推荐0.6
+    blur: 0.6
 server:
   port: 8080
   tomcat:
